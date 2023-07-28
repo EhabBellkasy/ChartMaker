@@ -1,7 +1,9 @@
 import datetime as dt
 from datetime import date
+import sys
+sys.path.append('D:\Python Tools\ChartMaker\GetData')
+#from ChartMaker.GetData.GetData import GetData
 import GetData
-
 import pandas as pd
 
 # set variables:
