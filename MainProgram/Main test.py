@@ -9,8 +9,8 @@ import GetData
 
 # set variables:
 
-filePathWL = r"C:\Users\lenovo\Desktop\Python Project\Ehab\watch List.xlsx"
-filePath_Distnation = r"C:\Users\lenovo\Desktop\Python Project\Ehab\Results\HHV2 Watch List "
+filePathWL = r"D:\Python Tools\ChartMaker\SourceDocuments\InPut_Excel\Watch_List.xlsx"
+filePath_Distnation = r"D:\Python Tools\ChartMaker\SourceDocuments\OutPut_Excel\gv "
 
 # import Watch List from excel 
 print ("import watch List from excel ")

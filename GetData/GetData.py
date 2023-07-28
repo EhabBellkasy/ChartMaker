@@ -22,7 +22,7 @@ import IntraDay_yf
 
 def fun (   ticker = 'goog',
             END = dt.datetime.now(),
-            filePath = r"C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Split ",
+            filePath = r"D:\Python Tools\ChartMaker\SourceDocuments\OutPut_Excel\def ",
             yahoo_Fundamentals = True,
             yahoo_NEWS = True,
             yahoo_Days = True,

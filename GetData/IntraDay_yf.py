@@ -18,7 +18,7 @@ from datetime import date
 
 def fun(    ticker = 'goog',
             END = dt.datetime.now(),
-            filePath = r"C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Split ",
+            filePath = r"D:\Python Tools\ChartMaker\SourceDocuments\OutPut_Excel\def ",
             daysNumber = 10,
             rollingHL = 17,
             interval ='1h', 

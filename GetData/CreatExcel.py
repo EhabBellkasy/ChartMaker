@@ -3,7 +3,7 @@
 import pandas as pd
 
 def fun(    ticker = 'goog',
-            filePath = r"C\Users\lenovo\Desktop\Python Project\Ehab\Results\Split ",
+            filePath = r"D:\Python Tools\ChartMaker\SourceDocuments\OutPut_Excel\def ",
             sheetName = 'Samary'
         ):
     
