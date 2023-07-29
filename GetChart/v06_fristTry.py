@@ -17,7 +17,7 @@ import openpyxl
 # Set Varibles
 #------------------------------------------------     
 filePath = r'D:\Python Tools\ChartMaker\SourceDocuments\OutPut_Excel\gv SIEB.xlsx'
-filePathChart = r'D:\Python Tools\ChartMaker\SourceDocuments\OutPut_jpg\Chart test.jpg' #    C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Chart test.jpg
+filePathChart = r'D:\Python Tools\ChartMaker\SourceDocuments\OutPut_jpg\Chart test.png' #    C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Chart test.jpg
 
 # Import  data
 #------------------------------------------------  
@@ -53,10 +53,126 @@ fabalines=dict(    hlines=(2.6, 2.4, 2.2),
                 linewidths=(3,4,2) 
             )
 
+#Saving plot to a file
+# Link: https://github.com/matplotlib/mplfinance/blob/master/examples/savefig.ipynb
+#------------------------------------------------
+save = dict(fname= filePathChart, dpi= 200, pad_inches= 0)
 
 
 #Make a chart
 #------------------------------------------------
+rcEhab = dict()
+#RC test:
+# link : C:\Users\lenovo\anaconda3\Lib\site-packages\mplfinance\_styledata\mike.py
+EhabStaylo = dict(style_name    = 'Ehab_Staylo',
+             base_mpl_style= 'dark_background', 
+             marketcolors  = {'candle'  : {'up':'#000000', 'down':'#0080ff'},
+                              'edge'    : {'up':'#ffffff', 'down':'#0080ff'},
+                              'wick'    : {'up':'#ffffff', 'down':'#ffffff'},
+                              'ohlc'    : {'up':'#ffffff', 'down':'#ffffff'},
+                              'volume'  : {'up':'#7189aa', 'down':'#7189aa'},
+                              'vcdopcod': False, # Volume Color Depends On Price Change On Day
+                              'alpha'   : 1.0,
+                             },
+             mavcolors     = ['#ec009c','#78ff8f','#fcf120'],
+             y_on_right    = True,
+             gridcolor     = None,
+             gridstyle     = None,
+             facecolor     = None,
+             rc            = [ ('axes.edgecolor'  , 'white'   ),
+                               ('axes.linewidth'  ,  1.5      ),
+                               ('axes.labelsize'  , 'large'   ),
+                               ('axes.labelweight', 'semibold'),
+                               ('axes.grid'       , True      ),
+                               ('axes.grid.axis'  , 'both'    ),
+                               ('axes.grid.which' , 'major'   ),
+                               ('grid.alpha'      ,  0.9      ),
+                               ('grid.color'      , '#b0b0b0' ),
+                               ('grid.linestyle'  , '--'      ),
+                               ('grid.linewidth'  ,  0.8      ),
+                               ('figure.facecolor', '#0a0a0a' ),
+                               ('patch.linewidth' ,  1.0      ),
+                               ('lines.linewidth' ,  1.0      ),
+                               ('font.weight'     , 'medium'  ),
+                               ('font.size'       ,  10.0     ),
+                               ('figure.titlesize', 'x-large' ),
+                               ('figure.titleweight','semibold'),
+                             ],
+             base_mpf_style= 'mike'
+            )
+
+
+'''
+style = dict(style_name    = 'mike',
+             base_mpl_style= 'dark_background', 
+             marketcolors  = {'candle'  : {'up':'#000000', 'down':'#0080ff'},
+                              'edge'    : {'up':'#ffffff', 'down':'#0080ff'},
+                              'wick'    : {'up':'#ffffff', 'down':'#ffffff'},
+                              'ohlc'    : {'up':'#ffffff', 'down':'#ffffff'},
+                              'volume'  : {'up':'#7189aa', 'down':'#7189aa'},
+                              'vcdopcod': False, # Volume Color Depends On Price Change On Day
+                              'alpha'   : 1.0,
+                             },
+             mavcolors     = ['#ec009c','#78ff8f','#fcf120'],
+             y_on_right    = True,
+             gridcolor     = None,
+             gridstyle     = None,
+             facecolor     = None,
+             rc            = [ ('axes.edgecolor'  , 'white'   ),
+                               ('axes.linewidth'  ,  1.5      ),
+                               ('axes.labelsize'  , 'large'   ),
+                               ('axes.labelweight', 'semibold'),
+                               ('axes.grid'       , True      ),
+                               ('axes.grid.axis'  , 'both'    ),
+                               ('axes.grid.which' , 'major'   ),
+                               ('grid.alpha'      ,  0.9      ),
+                               ('grid.color'      , '#b0b0b0' ),
+                               ('grid.linestyle'  , '--'      ),
+                               ('grid.linewidth'  ,  0.8      ),
+                               ('figure.facecolor', '#0a0a0a' ),
+                               ('patch.linewidth' ,  1.0      ),
+                               ('lines.linewidth' ,  1.0      ),
+                               ('font.weight'     , 'medium'  ),
+                               ('font.size'       ,  10.0     ),
+                               ('figure.titlesize', 'x-large' ),
+                               ('figure.titleweight','semibold'),
+                             ],
+             base_mpf_style= 'mike'
+            )
+
+
+||||||||||||||||||||||||||||||||||||||||||||||||||
+
+rc=                 [   ('axes.edgecolor'  , 'white'   ),
+                                                        ('axes.linewidth'  ,  1.5      ),
+                                                        ('axes.labelsize'  , 'large'   ),
+                                                        ('axes.labelweight', 'semibold'),
+                                                        ('axes.grid'       , True      ),
+                                                        ('axes.grid.axis'  , 'both'    ),
+                                                        ('axes.grid.which' , 'major'   ),
+                                                        ('grid.alpha'      ,  0.9      ),
+                                                        ('grid.color'      , '#b0b0b0' ),
+                                                        ('grid.linestyle'  , '--'      ),
+                                                        ('grid.linewidth'  ,  0.8      ),
+                                                        ('figure.facecolor', '#0a0a0a' ),
+                                                        ('patch.linewidth' ,  1.0      ),
+                                                        ('lines.linewidth' ,  1.0      ),
+                                                        ('font.weight'     , 'medium'  ),
+                                                        ('font.size'       ,  10.0     ),
+                                                        ('figure.titlesize', 'x-large' ),
+                                                        ('figure.titleweight','semibold'),
+                                                    ],
+
+                                                    
+
+
+
+'''
+
+
+
+
+
 
 #marketcolors
 mc = mpf.make_marketcolors(up='g',
@@ -77,6 +193,7 @@ styleEhab  = mpf.make_mpf_style(marketcolors=mc,
                                 figcolor = 'gray',
                                 facecolor= 'Black',
                                 edgecolor= 'r',
+                                
                                 y_on_right= False
 
                                 
@@ -93,15 +210,16 @@ mpf.plot(data=df,
          volume= True,
          show_nontrading= False,
          tight_layout= False,
-         figratio=(18,10),
-         figscale=2.5,
+         figratio=(1,1),
+         figscale=1,
+         scale_padding=.6,
          #figsize=(30,10),
          ylim= (2.00,2.80), # need to change to set min and max
          xrotation=0,
          yscale="linear", # y-axis scale: "linear", "log", "symlog", or "logit"
          volume_yscale="linear", # Volume y-axis scale: "linear", "log", "symlog", or "logit"
-         style= styleEhab,
-         savefig= filePathChart, # link: https://github.com/matplotlib/mplfinance/blob/master/examples/savefig.ipynb
+         style= EhabStaylo,
+         savefig= save, # link: https://github.com/matplotlib/mplfinance/blob/master/examples/savefig.ipynb
          hlines= fabalines
          #marketcolor_overrides=mco  # link https://github.com/matplotlib/mplfinance/blob/master/examples/marketcolor_overrides.ipynb
          )
