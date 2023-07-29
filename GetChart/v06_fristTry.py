@@ -22,7 +22,7 @@ filePathChart = r'D:\Python Tools\ChartMaker\SourceDocuments\OutPut_jpg\Chart te
 # Import  data
 #------------------------------------------------  
 book = openpyxl.load_workbook(filePath)
-sheet = book["Yahoo Hours"]
+sheet = book["Yahoo 1m"]
 df= pd.DataFrame(sheet.values)
 
 
@@ -47,6 +47,8 @@ df[cols] = df[cols].apply(pd.to_numeric, errors='coerce')
 #Make a fibanatchi line
 # Link: https://github.com/matplotlib/mplfinance/blob/master/examples/using_lines.ipynb
 #------------------------------------------------
+# NOT FINSH
+#------------------------------------------------
 fabalines=dict(    hlines=(2.6, 2.4, 2.2),
                 colors=['r','g','b'],
                 linestyle='solid',
@@ -61,24 +63,25 @@ save = dict(fname= filePathChart, dpi= 200, pad_inches= 0)
 
 #Make a chart
 #------------------------------------------------
-rcEhab = dict()
+
 #RC test:
 # link : C:\Users\lenovo\anaconda3\Lib\site-packages\mplfinance\_styledata\mike.py
 EhabStaylo = dict(style_name    = 'Ehab_Staylo',
              base_mpl_style= 'dark_background', 
-             marketcolors  = {'candle'  : {'up':'#000000', 'down':'#0080ff'},
-                              'edge'    : {'up':'#ffffff', 'down':'#0080ff'},
+             marketcolors  = {'candle'  : {'up':'#14CE1C', 'down':'#CE1414'},
+                              'edge'    : {'up':'#14CE1C', 'down':'#CE1414'},
                               'wick'    : {'up':'#ffffff', 'down':'#ffffff'},
                               'ohlc'    : {'up':'#ffffff', 'down':'#ffffff'},
-                              'volume'  : {'up':'#7189aa', 'down':'#7189aa'},
+                              'volume'  : {'up':'#14CE1C', 'down':'#CE1414'},
                               'vcdopcod': False, # Volume Color Depends On Price Change On Day
-                              'alpha'   : 1.0,
+                              'alpha'   : 2.0,
                              },
              mavcolors     = ['#ec009c','#78ff8f','#fcf120'],
              y_on_right    = True,
              gridcolor     = None,
              gridstyle     = None,
-             facecolor     = None,
+             facecolor     = 'Black',
+             figcolor      = 'gray',
              rc            = [ ('axes.edgecolor'  , 'white'   ),
                                ('axes.linewidth'  ,  1.5      ),
                                ('axes.labelsize'  , 'large'   ),
@@ -87,14 +90,14 @@ EhabStaylo = dict(style_name    = 'Ehab_Staylo',
                                ('axes.grid.axis'  , 'both'    ),
                                ('axes.grid.which' , 'major'   ),
                                ('grid.alpha'      ,  0.9      ),
-                               ('grid.color'      , '#b0b0b0' ),
-                               ('grid.linestyle'  , '--'      ),
+                               ('grid.color'      , '#EBEE24' ),
+                               ('grid.linestyle'  , '-.'      ),
                                ('grid.linewidth'  ,  0.8      ),
                                ('figure.facecolor', '#0a0a0a' ),
                                ('patch.linewidth' ,  1.0      ),
                                ('lines.linewidth' ,  1.0      ),
                                ('font.weight'     , 'medium'  ),
-                               ('font.size'       ,  10.0     ),
+                               ('font.size'       ,  8.0     ),
                                ('figure.titlesize', 'x-large' ),
                                ('figure.titleweight','semibold'),
                              ],
@@ -169,7 +172,7 @@ rc=                 [   ('axes.edgecolor'  , 'white'   ),
 
 '''
 
-
+'''
 
 
 
@@ -199,7 +202,7 @@ styleEhab  = mpf.make_mpf_style(marketcolors=mc,
                                 
                                 )
 
-
+'''
 
                                            
 
@@ -210,11 +213,11 @@ mpf.plot(data=df,
          volume= True,
          show_nontrading= False,
          tight_layout= False,
-         figratio=(1,1),
+         figratio=(5,1),
          figscale=1,
-         scale_padding=.6,
+         scale_padding=1.01,
          #figsize=(30,10),
-         ylim= (2.00,2.80), # need to change to set min and max
+         ylim= (2.20,2.80), # need to change to set min and max
          xrotation=0,
          yscale="linear", # y-axis scale: "linear", "log", "symlog", or "logit"
          volume_yscale="linear", # Volume y-axis scale: "linear", "log", "symlog", or "logit"
