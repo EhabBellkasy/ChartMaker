@@ -204,7 +204,10 @@ styleEhab  = mpf.make_mpf_style(marketcolors=mc,
 
 '''
 
-                                           
+print(df.High.max()) 
+print((df.High.max())*1.05)
+print(df.High.min())   
+print((df.Low.min())*0.95)                                        
 
 mpf.plot(data=df,
          title= '\n test Chart', 
@@ -217,7 +220,7 @@ mpf.plot(data=df,
          figscale=1,
          scale_padding=1.01,
          #figsize=(30,10),
-         ylim= (2.20,2.80), # need to change to set min and max
+         ylim= (((df.Low.min())*0.95) ,((df.High.max())*1.05)), # need to change to set min and max
          xrotation=0,
          yscale="linear", # y-axis scale: "linear", "log", "symlog", or "logit"
          volume_yscale="linear", # Volume y-axis scale: "linear", "log", "symlog", or "logit"
