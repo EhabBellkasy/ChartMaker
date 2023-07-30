@@ -16,6 +16,7 @@ from datetime import date
 
 
 
+
 def fun(    ticker = 'goog',
             END = dt.datetime.now(),
             filePath = r"D:\Python Tools\ChartMaker\SourceDocuments\OutPut_Excel\def ",
@@ -69,6 +70,7 @@ def fun(    ticker = 'goog',
             #df['200MA_past']           = df['200MA'].shift(20)
             df['low'+str(rollingHL)]    = df.Low.rolling(rollingHL).min()
             df['high'+str(rollingHL)]   = df.High.rolling(rollingHL).max()
+            
 
         except Exception:
             print(f' Error on Yahoo Hours : No data!')

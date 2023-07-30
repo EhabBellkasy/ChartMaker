@@ -41,18 +41,33 @@ df = df.set_index('Datetime')
 cols = df.columns
 df[cols] = df[cols].apply(pd.to_numeric, errors='coerce')
 
-
-
+#Make Yallow Color Candel 
+#------------------------------------------------
+#df['Color'] = setColor(df)
+df['MCOverrides'] = [None]*len(df)
+print(df.head(3))
+for ts in df.index:
+    if    ( (df.loc[ts,'Open']    ==  df.loc[ts,'Close']) and 
+            (df.loc[ts,'Volume']  >   0)):
+                                            df.loc[ts,'MCOverrides'] = '#FCFC00' # Yellow
+    elif  ( (df.loc[ts,'Open']    == df.loc[ts,'Close']) and 
+            (df.loc[ts,'Open']    == df.loc[ts,'High']) and 
+            (df.loc[ts,'High']    == df.loc[ts,'Low']) and 
+            (df.loc[ts,'Volume']  == 0)):
+                                            df.loc[ts,'MCOverrides'] = '#8A8A8A' # Grey
+print(df.head(3))
+mco = df['MCOverrides'].values
 
 #Make a fibanatchi line
 # Link: https://github.com/matplotlib/mplfinance/blob/master/examples/using_lines.ipynb
 #------------------------------------------------
 # NOT FINSH
 #------------------------------------------------
-fabalines=dict(    hlines=(2.6, 2.4, 2.2),
-                colors=['r','g','b'],
+fabalines=dict( hlines=(2.75, 2.65, 2.55, 2.45, 2.35, 2.25, 2.15),
+                colors=['#4ACE14','#E21919','#27DFDD', '#E6F226', '#27DFDD', '#E21919','#4ACE14'],
                 linestyle='solid',
-                linewidths=(3,4,2) 
+                linewidths=3,
+                alpha= 0.8 
             )
 
 #Saving plot to a file
@@ -66,43 +81,43 @@ save = dict(fname= filePathChart, dpi= 200, pad_inches= 0)
 
 #RC test:
 # link : C:\Users\lenovo\anaconda3\Lib\site-packages\mplfinance\_styledata\mike.py
-EhabStaylo = dict(style_name    = 'Ehab_Staylo',
-             base_mpl_style= 'dark_background', 
-             marketcolors  = {'candle'  : {'up':'#14CE1C', 'down':'#CE1414'},
-                              'edge'    : {'up':'#14CE1C', 'down':'#CE1414'},
-                              'wick'    : {'up':'#ffffff', 'down':'#ffffff'},
-                              'ohlc'    : {'up':'#ffffff', 'down':'#ffffff'},
-                              'volume'  : {'up':'#14CE1C', 'down':'#CE1414'},
-                              'vcdopcod': False, # Volume Color Depends On Price Change On Day
-                              'alpha'   : 2.0,
-                             },
-             mavcolors     = ['#ec009c','#78ff8f','#fcf120'],
-             y_on_right    = True,
-             gridcolor     = None,
-             gridstyle     = None,
-             facecolor     = 'Black',
-             figcolor      = 'gray',
-             rc            = [ ('axes.edgecolor'  , 'white'   ),
-                               ('axes.linewidth'  ,  1.5      ),
-                               ('axes.labelsize'  , 'large'   ),
-                               ('axes.labelweight', 'semibold'),
-                               ('axes.grid'       , True      ),
-                               ('axes.grid.axis'  , 'both'    ),
-                               ('axes.grid.which' , 'major'   ),
-                               ('grid.alpha'      ,  0.9      ),
-                               ('grid.color'      , '#EBEE24' ),
-                               ('grid.linestyle'  , '-.'      ),
-                               ('grid.linewidth'  ,  0.8      ),
-                               ('figure.facecolor', '#0a0a0a' ),
-                               ('patch.linewidth' ,  1.0      ),
-                               ('lines.linewidth' ,  1.0      ),
-                               ('font.weight'     , 'medium'  ),
-                               ('font.size'       ,  8.0     ),
-                               ('figure.titlesize', 'x-large' ),
-                               ('figure.titleweight','semibold'),
-                             ],
-             base_mpf_style= 'mike'
-            )
+EhabStaylo = dict(  style_name    = 'Ehab_Staylo',
+                    base_mpl_style= 'dark_background', 
+                    marketcolors  = {'candle'  : {'up':'#14CE1C', 'down':'#CE1414'},
+                                      'edge'    : {'up':'#14CE1C', 'down':'#CE1414'},
+                                      'wick'    : {'up':'#ffffff', 'down':'#ffffff'},
+                                      'ohlc'    : {'up':'#ffffff', 'down':'#ffffff'},
+                                      'volume'  : {'up':'#14CE1C', 'down':'#CE1414'},
+                                      'vcdopcod': False, # Volume Color Depends On Price Change On Day
+                                      'alpha'   : 2.0,
+                                    },
+                    mavcolors     = ['#ec009c','#78ff8f','#fcf120'],
+                    y_on_right    = True,
+                    gridcolor     = None,
+                    gridstyle     = None,
+                    facecolor     = 'Black',
+                    figcolor      = 'gray',
+                    rc            = [ ('axes.edgecolor'  , 'white'   ),
+                                      ('axes.linewidth'  ,  1.5      ),
+                                      ('axes.labelsize'  , 'large'   ),
+                                      ('axes.labelweight', 'semibold'),
+                                      ('axes.grid'       , True      ),
+                                      ('axes.grid.axis'  , 'both'    ),
+                                      ('axes.grid.which' , 'major'   ),
+                                      ('grid.alpha'      ,  0.9      ),
+                                      ('grid.color'      , '#EBEE24' ),
+                                      ('grid.linestyle'  , ':'      ),
+                                      ('grid.linewidth'  ,  1.0      ),
+                                      ('figure.facecolor', '#0a0a0a' ),
+                                      ('patch.linewidth' ,  1.0      ),
+                                      ('lines.linewidth' ,  1.0      ),
+                                      ('font.weight'     , 'medium'  ),
+                                      ('font.size'       ,  8.0     ),
+                                      ('figure.titlesize', 'x-large' ),
+                                      ('figure.titleweight','semibold'),
+                                    ],
+                    base_mpf_style= 'mike'
+                  )
 
 
 '''
@@ -204,11 +219,6 @@ styleEhab  = mpf.make_mpf_style(marketcolors=mc,
 
 '''
 
-print(df.High.max()) 
-print((df.High.max())*1.05)
-print(df.High.min())   
-print((df.Low.min())*0.95)                                        
-
 mpf.plot(data=df,
          title= '\n test Chart', 
          type='candle', 
@@ -220,11 +230,13 @@ mpf.plot(data=df,
          figscale=1,
          scale_padding=1.01,
          #figsize=(30,10),
-         ylim= (((df.Low.min())*0.95) ,((df.High.max())*1.05)), # need to change to set min and max
+         ylim= (((df.Low.min())*0.95) ,((df.High.max())*1.05)), # set min and max of Chart
          xrotation=0,
          yscale="linear", # y-axis scale: "linear", "log", "symlog", or "logit"
          volume_yscale="linear", # Volume y-axis scale: "linear", "log", "symlog", or "logit"
          style= EhabStaylo,
+         marketcolor_overrides=mco,
+         mco_faceonly=False,
          savefig= save, # link: https://github.com/matplotlib/mplfinance/blob/master/examples/savefig.ipynb
          hlines= fabalines
          #marketcolor_overrides=mco  # link https://github.com/matplotlib/mplfinance/blob/master/examples/marketcolor_overrides.ipynb
