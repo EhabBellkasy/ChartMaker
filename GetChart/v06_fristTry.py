@@ -41,22 +41,6 @@ df = df.set_index('Datetime')
 cols = df.columns
 df[cols] = df[cols].apply(pd.to_numeric, errors='coerce')
 
-#Make Yallow Color Candel 
-#------------------------------------------------
-#df['Color'] = setColor(df)
-df['MCOverrides'] = [None]*len(df)
-print(df.head(3))
-for ts in df.index:
-    if    ( (df.loc[ts,'Open']    ==  df.loc[ts,'Close']) and 
-            (df.loc[ts,'Volume']  >   0)):
-                                            df.loc[ts,'MCOverrides'] = '#FCFC00' # Yellow
-    elif  ( (df.loc[ts,'Open']    == df.loc[ts,'Close']) and 
-            (df.loc[ts,'Open']    == df.loc[ts,'High']) and 
-            (df.loc[ts,'High']    == df.loc[ts,'Low']) and 
-            (df.loc[ts,'Volume']  == 0)):
-                                            df.loc[ts,'MCOverrides'] = '#8A8A8A' # Grey
-print(df.head(3))
-mco = df['MCOverrides'].values
 
 #Make a fibanatchi line
 # Link: https://github.com/matplotlib/mplfinance/blob/master/examples/using_lines.ipynb
@@ -76,10 +60,12 @@ fabalines=dict( hlines=(2.75, 2.65, 2.55, 2.45, 2.35, 2.25, 2.15),
 save = dict(fname= filePathChart, dpi= 200, pad_inches= 0)
 
 
-#Make a chart
+#Chart theme
 #------------------------------------------------
 
-#RC test:
+
+
+#Set Style:
 # link : C:\Users\lenovo\anaconda3\Lib\site-packages\mplfinance\_styledata\mike.py
 EhabStaylo = dict(  style_name    = 'Ehab_Staylo',
                     base_mpl_style= 'dark_background', 
@@ -187,6 +173,96 @@ rc=                 [   ('axes.edgecolor'  , 'white'   ),
 
 '''
 
+#marketcolors
+# mc = mpf.make_marketcolors(volume='in')
+
+# styleEhab  = mpf.make_mpf_style(marketcolors=mc, base_mpl_style=EhabStaylo)
+#EhabStaylo  = mpf.make_mpf_style(marketcolors=mc)
+#EhabStaylo.marketcolors.volume='in'
+
+# styleEhab  = mpf.make_mpf_style(marketcolors  = mc,
+#                                 rc            = EhabStaylo
+
+                                
+#                                 )
+
+mc_Y = mpf.make_marketcolors(base_mpf_style='blueskies',
+                             up='y' , # Yellow '#FCFC00'
+                            down='y' , # Yellow '#FCFC00'
+                            edge='inherit',
+                            wick={'up':'w','down':'w'},
+                            volume='in',
+                            ohlc='i'
+                           
+                           
+                           )
+
+
+mc_G = mpf.make_marketcolors(base_mpf_style='blueskies',
+                             up='b' , # Grey '#8A8A8A'
+                            down='b' , # Grey '#8A8A8A'
+                            edge='inherit',
+                            wick={'up':'w','down':'w'},
+                            volume='in',
+                            ohlc='i'
+                           
+                           
+                           )
+
+
+# mc_Y = mpf.make_marketcolors(base_mpf_style='blueskies')
+# mc_G = mpf.make_marketcolors(base_mpf_style='blueskies')
+mc_T = mpf.make_marketcolors(base_mpf_style='yahoo',up=(0.7,1.0,0.7,0.4),down='fuchsia',
+                           edge={'up':'blue','down':'#000000'},wick='#cc6600')
+
+print("")
+print("")
+print("")
+print("-------------------------------------------------------------")
+print("mc_Y")
+print(mc_Y)
+print("-------------------------------------------------------------")
+print("")
+print("")
+print("")
+#Make Yallow Color Candel 
+df['MCOverrides'] = [None]*len(df)
+print(df.head(3))
+for ts in df.index:
+    if    ( (df.loc[ts,'Open']    ==  df.loc[ts,'Close']) and 
+            (df.loc[ts,'Volume']  >   0)):
+                                            df.loc[ts,'MCOverrides'] = '#FCFC00'
+    elif  ( (df.loc[ts,'Open']    == df.loc[ts,'Close']) and 
+            (df.loc[ts,'Open']    == df.loc[ts,'High']) and 
+            (df.loc[ts,'High']    == df.loc[ts,'Low']) and 
+            (df.loc[ts,'Volume']  == 0)):
+                                            df.loc[ts,'MCOverrides'] = '#8A8A8A'
+print(df.head(3))
+
+print("/*-/*-/*-/*-")
+mco = df['MCOverrides'].values
+print(len(mco))
+print((mco))
+
+
+# for ei in range (len(mco)):
+#         if    (mco[ei] == '#FCFC00'):
+#                mco[ei] = mc_Y
+#         elif  (mco[ei] == '#8A8A8A'):
+#                mco[ei] = mc_G
+mco[0] = mc_Y
+# mco[1] = mc_Y
+# mco[2] = mc_Y
+# mco[3] = mc_Y
+# mco[4] = mc_Y
+# mco[5] = mc_Y
+# mco[6] = mc_Y
+# mco[7] = mc_Y
+# mco[8] = mc_Y
+# mco[9] = mc_Y
+
+print("/*-/*-/*-/*-")
+print((mco))
 '''
 
 
@@ -219,6 +295,25 @@ styleEhab  = mpf.make_mpf_style(marketcolors=mc,
 
 '''
 
+
+# #Make Yallow Color Candel 
+# df['MCOverrides'] = [None]*len(df)
+# print(df.head(3))
+# for ts in df.index:
+#     if    ( (df.loc[ts,'Open']    ==  df.loc[ts,'Close']) and 
+#             (df.loc[ts,'Volume']  >   0)):
+#                                             df.loc[ts,'MCOverrides'] = '#FCFC00' # Yellow
+#     elif  ( (df.loc[ts,'Open']    == df.loc[ts,'Close']) and 
+#             (df.loc[ts,'Open']    == df.loc[ts,'High']) and 
+#             (df.loc[ts,'High']    == df.loc[ts,'Low']) and 
+#             (df.loc[ts,'Volume']  == 0)):
+#                                             df.loc[ts,'MCOverrides'] = '#8A8A8A' # Grey
+# print(df.head(3))
+# mco = df['MCOverrides'].values
+
+
+#Make a chart
+#------------------------------------------------
 mpf.plot(data=df,
          title= '\n test Chart', 
          type='candle', 
