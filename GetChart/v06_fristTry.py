@@ -16,26 +16,19 @@ import openpyxl
 
 from ChartStyel import EhabStaylo
 import ImportData
+import FibonacciLines
+
 
 # Set Varibles
 #------------------------------------------------     
 filePath = r'D:\Python Tools\ChartMaker\SourceDocuments\OutPut_Excel\gv SIEB.xlsx'
 filePathChart = r'D:\Python Tools\ChartMaker\SourceDocuments\OutPut_jpg\Chart test.png' #    C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Chart test.jpg
 
-
+# Import  data
 df = ImportData.fun (filePath_fun = filePath)
 
-#Make a fibanatchi line
-# Link: https://github.com/matplotlib/mplfinance/blob/master/examples/using_lines.ipynb
-#------------------------------------------------
-# NOT FINSH
-#------------------------------------------------
-fabalines=dict( hlines=(2.75, 2.65, 2.55, 2.45, 2.35, 2.25, 2.15),
-                colors=['#4ACE14','#E21919','#27DFDD', '#E6F226', '#27DFDD', '#E21919','#4ACE14'],
-                linestyle='solid',
-                linewidths=3,
-                alpha= 0.8 
-            )
+#Make a fibonacci lines
+fabalines = FibonacciLines.fun (filePath_fun = filePath)
 
 #Saving plot to a file
 # Link: https://github.com/matplotlib/mplfinance/blob/master/examples/savefig.ipynb
