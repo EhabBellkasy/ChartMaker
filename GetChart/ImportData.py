@@ -4,12 +4,12 @@ import numpy as np
 import openpyxl
 
 
-def fun (filePath_fun) :
+def fun (filePath_fun, bookName = "Yahoo 1m") :
         
     # Import  data
     #------------------------------------------------  
     book = openpyxl.load_workbook(filePath_fun)
-    sheet = book["Yahoo 1m"]
+    sheet = book[bookName]
     df= pd.DataFrame(sheet.values)
 
 
