@@ -4,14 +4,13 @@ from plotly.subplots import make_subplots
 
 
 
-
 def fun (dataFrame) :
 
         
 
         #Make Yellow Color Candel 
         dataFrame['MCOverrides'] = [None]*len(dataFrame)
-        print(dataFrame.head(3))
+        # print(dataFrame.head(3))
         for ts in dataFrame.index:
             if    ( (dataFrame.loc[ts,'Open']    ==  dataFrame.loc[ts,'Close']) and 
                     (dataFrame.loc[ts,'Volume']  >   0)):
@@ -21,12 +20,12 @@ def fun (dataFrame) :
                     (dataFrame.loc[ts,'High']    == dataFrame.loc[ts,'Low']) and 
                     (dataFrame.loc[ts,'Volume']  == 0)):
                                                     dataFrame.loc[ts,'MCOverrides'] = '#8A8A8A'
-        print(dataFrame.head(3))
+        # print(dataFrame.head(3))
 
-        print("/*-/*-/*-/*-")
+        # print("/*-/*-/*-/*-")
         mco = dataFrame['MCOverrides'].values
-        print(len(mco))
-        print((mco))
+        # print(len(mco))
+        # print((mco))
 
 
         # for ei in range (len(mco)):
@@ -45,8 +44,8 @@ def fun (dataFrame) :
         # mco[8] = mc_Y
         # mco[9] = mc_Y
 
-        print("/*-/*-/*-/*-")
-        print((mco))
+        # print("/*-/*-/*-/*-")
+        # print((mco))
         '''
 
 

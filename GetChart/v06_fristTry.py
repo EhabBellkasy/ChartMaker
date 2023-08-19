@@ -19,6 +19,7 @@ import ImportData
 import FibonacciLines
 import YellowCandel
 import addIndicator
+import TimeStamp as TS
 
 
 # Set Varibles
@@ -29,14 +30,18 @@ filePathChart = r'D:\Python Tools\ChartMaker\SourceDocuments\OutPut_jpg\Chart te
 # Import  data
 df = ImportData.fun (filePath_fun = filePath , bookName = "Yahoo 1m")
 
+# Sampling data
+# dft = df[TS.index1_1m_A[0]:TS.index2_1m_A[0]]
+dft = df["2023-08-03 09:50:00":"2023-08-03 11:51:00"]
+
 #Make Yellow Color Candel 
-mco = YellowCandel.fun(dataFrame = df) 
+mco = YellowCandel.fun(dataFrame = dft) 
 
 #Make a fibonacci lines
 fabalines = FibonacciLines.fun (filePath_fun = filePath)
 
 #Make Indicator
-EMA = addIndicator.fun(dataFrame = df, scope = "1m" )
+EMA = addIndicator.fun(dataFrame = dft, scope = "1m" )
 
 #Saving plot to a file
 # Link: https://github.com/matplotlib/mplfinance/blob/master/examples/savefig.ipynb
@@ -50,19 +55,19 @@ save = dict(fname= filePathChart, dpi= 500, pad_inches= 0)
 #------------------------------------------------
 #Make a chart
 #------------------------------------------------
-mpf.plot(data                   = df,
+mpf.plot(data                   = dft,
          title                  = '\n test Chart', 
          type                   = 'candle', 
-         mav                    = (20,50),
+         #mav                    = (20,50),
          volume                 = True,
          show_nontrading        = False,
          tight_layout           = False,
-         figratio               = (5,1),
-         figscale               = 1,
-         scale_padding          = 1.01,
+         figratio               = (1,1),
+         figscale               = 3,
+         scale_padding          = 1.0,
          #figsize               = (30,10),
          #ylim                   = (((df.Low.min())*0.95) ,((df.High.max())*1.05)), # set min and max of Chart
-         ylim                   = (((df.Low.min())-0.03) ,((df.High.max())+0.03)), # set min and max of Chart
+         ylim                   = (((dft.Low.min())-0.03) ,((dft.High.max())+0.03)), # set min and max of Chart
          xrotation              = 0,
          yscale                 = "linear", # y-axis scale: "linear", "log", "symlog", or "logit"
          volume_yscale          = "linear", # Volume y-axis scale: "linear", "log", "symlog", or "logit"
