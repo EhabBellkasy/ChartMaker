@@ -23,6 +23,7 @@ watchList_xl = watchList_xl.set_index('Symbol')
 
 for ticker_index in tickersWL :
     END_day = watchList_xl.Date[ticker_index]
+    END_day = END_day + dt.timedelta(days=1)
     GetData.fun(    ticker = ticker_index,
                 END = END_day,
                 filePath = filePath_Distnation,

@@ -31,12 +31,13 @@ def fun(    ticker = 'goog',
         try:
             #download from yahoo finance:-   
                 df = yf.download ( ticker , start=START , end=END)
-
+                # df = yf.Ticker(ticker).history(start=START, end=END, interval='1d', prepost= False)
+                print(f'Print data')
             # add the columns
                 df[ 'SMA50']         = ta.trend.sma_indicator(df.Close,  50)
                 df['SMA150']         = ta.trend.sma_indicator(df.Close, 150)
                 df['SMA200']         = ta.trend.sma_indicator(df.Close, 200)
-                df['SMA_past200']    = df['200MA'].shift(20)
+                df['SMA_past200']    = df['SMA200'].shift(20)
                 df['low52']         = df.Low.rolling(252).min()
                 df['high52']        = df.High.rolling(252).max()
 

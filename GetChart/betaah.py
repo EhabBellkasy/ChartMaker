@@ -15,10 +15,10 @@ print(EZA)
 
 print("###################################################################")
 
-#index = 0
-index1 =TS.fun(scope="1m",indexType =1)
-index2 =TS.fun(scope="1m",indexType =2)
-index3 =TS.fun(scope="1m",indexType =3)
+index = 0
+index1 =TS.fun(scope="5s",indexType =1)
+index2 =TS.fun(scope="5s",indexType =2)
+index3 =TS.fun(scope="5s",indexType =3)
 
 print (len(index1))
 

@@ -21,7 +21,7 @@ def fun (dataFrame, scope = "1m" ) :
                         ]
 
 
-        if (scope == "Days") :
+        if (scope == "1d") :
                 EMA=[   mpf.make_addplot(dataFrame.SMA50 ,       type='line', color='#FFFFFF', width=0.5)   ,   #white  color
                         mpf.make_addplot(dataFrame.SMA150,       type='line', color='#7BFFF4', width=0.5)   ,   #Aqua   color
                         mpf.make_addplot(dataFrame.SMA200,       type='line', color='#E6FF3F', width=0.5)   ,   #Yellow color
@@ -31,7 +31,7 @@ def fun (dataFrame, scope = "1m" ) :
 
                     ]
                 
-        elif (scope == "Hours"):
+        elif (scope == "1h"):
                 EMA.append(mpf.make_addplot(dataFrame.low17 ,   title="low17",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
                 EMA.append(mpf.make_addplot(dataFrame.high17,   title="high17",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
                 
