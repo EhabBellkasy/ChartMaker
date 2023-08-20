@@ -32,6 +32,10 @@ timeScope = "1m"
 captureDay= "2023-08-03 "
 
 index = 0
+index1 =TS.fun(scope="1m",indexType =1)
+index2 =TS.fun(scope="1m",indexType =2)
+index3 =TS.fun(scope="1m",indexType =3)
+
 
 # Loop 1 
 # Import  data
@@ -39,7 +43,7 @@ dft = ImportData.fun (filePath_fun = filePath , bookName = bookName)
 
 # Loop 2
 # Sampling data
-df = dft[(captureDay + TS.index1_1m_A[index]):(captureDay + TS.index2_1m_A[index])]
+df = dft[(captureDay + index1[index]):(captureDay + index2[index])]
 
 #Make Yellow Color Candel 
 mco = YellowCandel.fun(dataFrame = df) 
@@ -50,18 +54,10 @@ fabalines = FibonacciLines.fun (filePath_fun = filePath)
 #Make Indicator
 EMA = addIndicator.fun(dataFrame = df, scope = timeScope )
 
-#Saving plot to a file
-# Link: https://github.com/matplotlib/mplfinance/blob/master/examples/savefig.ipynb
-#------------------------------------------------
-save = dict(fname= (filePathChart + '_' + (captureDay + TS.index3_1m_A[index]) + imageType), dpi= 500, pad_inches= 0)
+#Saving plot to a file -> Link: https://github.com/matplotlib/mplfinance/blob/master/examples/savefig.ipynb
+save = dict(fname= (filePathChart + '_' + (captureDay + index3[index]) + imageType), dpi= 500, pad_inches= 0)
 
-
-
-
-#Chart theme
-#------------------------------------------------
 #Make a chart
-#------------------------------------------------
 mpf.plot(data                   = df,
          title                  = '\n test Chart', 
          type                   = 'candle', 
