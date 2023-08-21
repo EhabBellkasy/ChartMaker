@@ -30,8 +30,10 @@ def fun(    ticker = 'goog',
     # download the data
         try:
             #download from yahoo finance:-   
-                df = yf.download ( ticker , start=START , end=END)
-                # df = yf.Ticker(ticker).history(start=START, end=END, interval='1d', prepost= False)
+                # df = yf.download ( ticker , start=START , end=END)
+                df = yf.Ticker(ticker).history(start=START, end=END, interval='1d', prepost= False)
+                # Solve timezone problem by removing it: help Link https://stackoverflow.com/questions/61802080/excelwriter-valueerror-excel-does-not-support-datetime-with-timezone-when-savin
+                df.index = df.index.tz_localize(None)
                 print(f'Print data')
             # add the columns
                 df[ 'SMA50']         = ta.trend.sma_indicator(df.Close,  50)

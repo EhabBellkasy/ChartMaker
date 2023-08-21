@@ -32,7 +32,7 @@ for ticker_index in tickersWL :
                 yahoo_Days = True,
                 daysNumber = 380,
                 yahoo_Hour = True,
-                daysHours = 10,
+                daysHours = 30,
                 yahoo_30Min = True,
                 days30Min = 10,
                 yahoo_15Min = True,
