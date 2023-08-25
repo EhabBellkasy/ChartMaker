@@ -4,6 +4,7 @@
 
 import yfinance as yf
 import mplfinance as mpf
+import matplotlib
 import ta
 
 import matplotlib.pyplot as plt
@@ -24,7 +25,7 @@ import CreateFile
 
 # Set Varibles
 #------------------------------------------------
-tickerName = 'mmm'     
+tickerName = 'MMM'     
 filePath = r'D:\Python Tools\ChartMaker\SourceDocuments\OutPut_Excel\gv mmm.xlsx'
 # filePathChart = r'D:\Python Tools\ChartMaker\SourceDocuments\OutPut_jpg\Chart test' #    C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Chart test.jpg
 filePathChart = r'D:\Python Tools\ChartMaker\SourceDocuments\OutPut_jpg' #    C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Chart test.jpg
@@ -64,20 +65,20 @@ for indexScope in range(len(bookScope)):
 
         #Saving plot to a file -> Link: https://github.com/matplotlib/mplfinance/blob/master/examples/savefig.ipynb
         setName = '\\' + tickerName + '_' + timeScope[indexScope] + '_' + indexTS.index4[index] + '_to_' + indexTS.index5[index]
-        save = dict(fname= (rxChartPath + setName + imageType), dpi= 500, pad_inches= 0)
+        save = dict(fname= (rxChartPath + setName + imageType), dpi= 300, pad_inches= 0)
 
         #Make a chart
         mpf.plot(data                   = df,
-                title                  = ('\n test Chart'+ ' ' + timeScope[indexScope]), 
+                title                  = (tickerName+ ' ' + timeScope[indexScope]),  #'\n test Chart'
                 type                   = 'candle', 
                 #mav                    = (20,50),
                 volume                 = True,
                 show_nontrading        = False,
-                tight_layout           = False,
-                figratio               = (1,1),
+                tight_layout           = True,
+                figratio               = (1.5,1),
                 figscale               = 3,
-                scale_padding          = 1.0,
-                #figsize               = (30,10),
+                scale_padding          = 0.30,
+                figsize               = (12,6),
                 #ylim                   = (((df.Low.min())*0.95) ,((df.High.max())*1.05)), # set min and max of Chart
                 ylim                   = (((df.Low.min())-0.03) ,((df.High.max())+0.03)), # set min and max of Chart
                 xrotation              = 0,

@@ -5,7 +5,8 @@ import pandas as pd
 import sys # Link:- https://stackoverflow.com/questions/4383571/importing-files-from-different-folder
 sys.path.append('D:\Python Tools\ChartMaker\GetData')
 import GetData
-
+sys.path.append('D:\Python Tools\ChartMaker\GetChart')
+import GetChart 
 
 # set variables:
 
@@ -25,24 +26,31 @@ for ticker_index in tickersWL :
     END_day = watchList_xl.Date[ticker_index]
     END_day = END_day + dt.timedelta(days=1)
     GetData.fun(    ticker = ticker_index,
-                END = END_day,
-                filePath = filePath_Distnation,
-                yahoo_Fundamentals = True,
-                yahoo_NEWS = True,
-                yahoo_Days = True,
-                daysNumber = 380,
-                yahoo_Hour = True,
-                daysHours = 30,
-                yahoo_30Min = True,
-                days30Min = 10,
-                yahoo_15Min = True,
-                days15Min = 10,
-                yahoo_5Min = True,
-                days5Min = 10,
-                yahoo_2Min = True,
-                days2Min = 10,
-                yahoo_1Min = True,
-                days1Min = 7
+                    END = END_day,
+                    filePath = filePath_Distnation,
+                    yahoo_Fundamentals = True,
+                    yahoo_NEWS = True,
+                    yahoo_Days = True,
+                    daysNumber = 380,
+                    yahoo_Hour = True,
+                    daysHours = 30,
+                    yahoo_30Min = True,
+                    days30Min = 10,
+                    yahoo_15Min = True,
+                    days15Min = 10,
+                    yahoo_5Min = True,
+                    days5Min = 10,
+                    yahoo_2Min = True,
+                    days2Min = 10,
+                    yahoo_1Min = True,
+                    days1Min = 7
+                )
+    GetChart.fun(   tickerName = ticker_index,     
+                    filePathExcel = filePath_Distnation + ticker_index + '.xlsx',
+                    filePathChart = r'D:\Python Tools\ChartMaker\SourceDocuments\OutPut_jpg',            #C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Chart test.jpg
+                    daySheet = "Yahoo Dayes",
+                    imageType= '.png'
+
     )
 
 print (f' Watch list is : ')
