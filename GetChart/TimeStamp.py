@@ -222,12 +222,185 @@ def fun2(   filePath ,
     return taro
 
 
+def fun3(   filePath ,
+            bookType    = "Yahoo", # ["Yahoo","IBKR"]
+            bookScope   = "Yahoo Dayes" ,
+            scope       = "1m", # ["5s","1m","5m","30m","1h","1d"]     
+            tDelta      = -1    
+        ): 
+    df = ImportData.fun (filePath_fun = filePath , bookName = bookScope)
+    Eday = str( df.index[-1] )
+    Sday = str( df.index[tDelta] )
+
+    if      (scope=="5s"):
+        taro = pd.DataFrame({
+                                'index1': index1_5s_A + index1_5s_B,
+                                'index2': index2_5s_A + index2_5s_B,
+                                'index3': index3_5s_A + index3_5s_B                                
+                            })
+        
+    elif    (scope=="1m"):
+        taro = pd.DataFrame({
+                                'index1': index1_1m_A,
+                                'index2': index2_1m_A,
+                                'index3': index3_1m_A
+                            })
+        
+    elif    (scope=="5m"):
+        taro = pd.DataFrame({
+                                'index1': index1_5m_A,
+                                'index2': index2_5m_A,
+                                'index3': index3_5m_A
+                            })
+        
+    elif    (scope=="30m"):
+        taro = pd.DataFrame({
+                                'index1': index1_30m_A,
+                                'index2': index2_30m_A,
+                                'index3': index3_30m_A
+                            })
+        
+    elif    (scope=="1h"):
+        taro = pd.DataFrame({
+                                'index1': index1_1h_A,
+                                'index2': index2_1h_A,
+                                'index3': index3_1h_A
+                            })
+        
+    elif    (scope=="1d"):
+        taro = pd.DataFrame({
+                                'index1': index1_1d_A,
+                                'index2': index2_1d_A,
+                                'index3': index3_1d_A
+                            })
+        
+
+    else:
+        print ("wrong Scope type only accept ['5s','1m','5m','30m','1h','1d']")
+    
+
+    if      (bookType=="Yahoo" ):# ["Yahoo","IBKR"]
+                    taro["index4"] = Eday[:10].replace('-', '') +'_'+ (taro.index1.str.replace(':', '')) # link:- https://www.statology.org/pandas-remove-characters-from-string/
+                    taro["index5"] = Eday[:10].replace('-', '') +'_'+ (taro.index2.str.replace(':', ''))
+                    taro.index1 = Sday[:11] + taro.index1 
+                    taro.index2 = Eday[:11] + taro.index2 
+
+                    taro.index1 = pd.to_datetime(taro.index1.astype('datetime64[ns]'))
+                    taro.index2 = pd.to_datetime(taro.index2.astype('datetime64[ns]'))
+
+    elif    (bookType=="IBKR"):
+                    taro["index4"] = Eday[:8].replace('-', '') +'_'+ (taro.index1.str.replace(':', '')) # link:- https://www.statology.org/pandas-remove-characters-from-string/
+                    taro["index5"] = Eday[:8].replace('-', '') +'_'+ (taro.index2.str.replace(':', ''))
+                    taro.index1 = Sday[:8] + (taro.index1.str.replace(':', ''))  
+                    taro.index2 = Eday[:8] + (taro.index2.str.replace(':', '')) 
+
+                    taro.index1 = pd.to_datetime(taro.index1.astype('datetime64[ns]'))
+                    taro.index2 = pd.to_datetime(taro.index2.astype('datetime64[ns]'))
+
+    return taro
 
 
 
 
 
 
+
+
+
+
+
+def fun4(   filePath ,
+            bookScope = "IBKR 1Day" ,
+            scope       = "1m" # ["5s","1m","5m","30m","1h","1d"]         
+        ): 
+    df = ImportData.fun2 (filePath_fun = filePath , bookName = bookScope)
+    # print ("##########################################################")
+    # print (df)
+
+    # df.Datetime = pd.to_datetime(df.Datetime.astype('datetime64[ns]'))
+    # print ("##########################################################")
+    # print (df)
+
+    # df = df.set_index('Datetime')
+    # print ("##########################################################")
+    # print (df)
+
+    Eday = str( df.index[-1] )
+    print (Eday)
+
+    if      (scope in ["5s",'5 secs']):
+        taro = pd.DataFrame({
+                                'index1': index1_5s_A + index1_5s_B,
+                                'index2': index2_5s_A + index2_5s_B,
+                                'index3': index3_5s_A + index3_5s_B
+                                # 'index4': index2_5s_A + index4_5s_B,
+                                # 'index5': index2_5s_A + index5_5s_B
+                            })
+        Sday = str( df.index[tDelta_5s_A] )
+
+    elif    (scope in ["1m",'1 min']):      
+        taro = pd.DataFrame({
+                                'index1': index1_1m_A,
+                                'index2': index2_1m_A,
+                                'index3': index3_1m_A
+                                # 'index4': index4_1m_A,
+                                # 'index5': index5_1m_A
+                            })
+        Sday = str( df.index[tDelta_1m_A] )
+
+    elif    (scope in ["5m",'5 mins']):
+        taro = pd.DataFrame({
+                                'index1': index1_5m_A,
+                                'index2': index2_5m_A,
+                                'index3': index3_5m_A
+                                # 'index4': index4_5m_A,
+                                # 'index5': index5_5m_A
+                            })
+        Sday = str( df.index[tDelta_5m_A] )
+
+    elif    (scope in ["30m",'30 mins']):
+        taro = pd.DataFrame({
+                                'index1': index1_30m_A,
+                                'index2': index2_30m_A,
+                                'index3': index3_30m_A
+                                # 'index4': index4_30m_A,
+                                # 'index5': index5_30m_A
+                            })
+        Sday = str( df.index[tDelta_30m_A] )
+
+    elif    (scope in ["1h",'1 hour']):     
+        taro = pd.DataFrame({
+                                'index1': index1_1h_A,
+                                'index2': index2_1h_A,
+                                'index3': index3_1h_A
+                                # 'index4': index4_1h_A,
+                                # 'index5': index5_1h_A
+                            })
+        Sday = str( df.index[tDelta_1h_A] )
+
+    elif    (scope in ["1d",'1 day']):
+        taro = pd.DataFrame({
+                                'index1': index1_1d_A,
+                                'index2': index2_1d_A,
+                                'index3': index3_1d_A
+                                # 'index4': index4_1d_A,
+                                # 'index5': index5_1d_A
+                            })
+        Sday = str( df.index[tDelta_1d_A] )
+
+    else:
+        print ("wrong Scope type only accept ['5s','1m','5m','30m','1h','1d']")
+    
+
+    taro["index4"] = Eday[:10].replace('-', '') +'_'+ (taro.index1.str.replace(':', '')) # link:- https://www.statology.org/pandas-remove-characters-from-string/
+    taro["index5"] = Eday[:10].replace('-', '') +'_'+ (taro.index2.str.replace(':', ''))
+    taro.index1 = Sday[:11] + taro.index1 
+    taro.index2 = Eday[:11] + taro.index2 
+
+    taro.index1 = pd.to_datetime(taro.index1.astype('datetime64[ns]'))
+    taro.index2 = pd.to_datetime(taro.index2.astype('datetime64[ns]'))
+
+    return taro
 
 
 

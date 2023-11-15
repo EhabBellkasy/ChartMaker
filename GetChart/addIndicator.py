@@ -89,6 +89,101 @@ def fun (dataFrame, scope = "1m" ) :
 
         return EMA
 
+
+
+
+def fun2 (dataFrame, scope = "1m" ) :
+        if (scope in ['1 day','1W','1M']) :
+                EMA=[   mpf.make_addplot(dataFrame.SMA50 ,       title="SMA50",         type='line', linestyle='solid',   alpha=0.5, width=0.5, color='#FFFFFF')   ,   #white  color
+                        mpf.make_addplot(dataFrame.SMA150,       title="SMA150",        type='line', linestyle='solid',   alpha=0.5, width=0.5, color='#7BFFF4')   ,   #Aqua   color
+                        mpf.make_addplot(dataFrame.SMA200,       title="SMA200",        type='line', linestyle='solid',   alpha=0.5, width=0.5, color='#E6FF3F')   ,   #Yellow color
+                        mpf.make_addplot(dataFrame.SMA_past200,  title="SMA_past200",   type='line', linestyle='solid',   alpha=0.5, width=0.5, color='#2D4DFF')   ,   #Blue   color                        
+                    ]
+                if      (scope == '1 day'):
+                                EMA.append(mpf.make_addplot(dataFrame.low21 ,   title="low21",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high21,   title="high21",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color                
+                elif    (scope == '1W'):
+                                EMA.append(mpf.make_addplot(dataFrame.low12 ,   title="low12",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high12,   title="high12",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color                
+                elif    (scope == '1M'):
+                                EMA.append(mpf.make_addplot(dataFrame.low12 ,   title="low12",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high12,   title="high12",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                
+
+        if (scope in ['1 secs','5 secs','10 secs','15 secs','30 secs',
+                      '1 min','2 mins','3 mins','5 mins','10 mins',
+                      '15 mins','20 mins','30 mins',
+                      '1 hour','2 hours','3 hours','4 hours','8 hours'
+                      ]):
+                EMA=[   #mpf.make_addplot(dataFrame.VWAP  , title="VWAP",   type='line', linestyle='dotted',   alpha = 0.5, width=3.5, color='#FC00FF')   ,   #purple color
+                        mpf.make_addplot(dataFrame.EMA009, title="EMA009", type='line', linestyle='solid',   alpha=0.5, width=0.5, color='#FFFFFF')   ,   #white  color
+                        mpf.make_addplot(dataFrame.EMA020, title="EMA020", type='line', linestyle='solid',   alpha=0.5, width=0.5, color='#7BFFF4')   ,   #Aqua   color
+                        mpf.make_addplot(dataFrame.EMA040, title="EMA040", type='line', linestyle='solid',   alpha=0.5, width=0.5, color='#E6FF3F')   ,   #Yellow color
+                        mpf.make_addplot(dataFrame.EMA050, title="EMA050", type='line', linestyle='solid',   alpha=0.5, width=0.5, color='#2D4DFF')   ,   #Blue   color
+                        mpf.make_addplot(dataFrame.EMA150, title="EMA150", type='line', linestyle='solid',   alpha=0.5, width=0.5, color='#FF2D2D')   ,   #Red    color
+                        mpf.make_addplot(dataFrame.EMA200, title="EMA200", type='line', linestyle='solid',   alpha=0.5, width=0.5, color='#2FC822')      #Green  color                        
+                        ]
+                if      (scope == '1 secs'):
+                                EMA.append(mpf.make_addplot(dataFrame.low60 ,   title="low60",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high60,   title="high60",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '5 secs'):
+                                EMA.append(mpf.make_addplot(dataFrame.low60 ,   title="low60",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high60,   title="high60",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '10 secs'):
+                                EMA.append(mpf.make_addplot(dataFrame.low30 ,   title="low30",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high30,   title="high30",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '15 secs'):
+                                EMA.append(mpf.make_addplot(dataFrame.low20 ,   title="low20",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high20,   title="high20",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '30 secs'):
+                                EMA.append(mpf.make_addplot(dataFrame.low10 ,   title="low10",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high10,   title="high10",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '1 min'):
+                                EMA.append(mpf.make_addplot(dataFrame.low5 ,   title="low5",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high5,   title="high5",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '2 mins'):
+                                EMA.append(mpf.make_addplot(dataFrame.low5 ,   title="low5",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high5,   title="high5",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '3 mins'):
+                                EMA.append(mpf.make_addplot(dataFrame.low10 ,   title="low10",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high10,   title="high10",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '5 mins'):
+                                EMA.append(mpf.make_addplot(dataFrame.low6 ,   title="low6",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high6,   title="high6",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '10 mins'):
+                                EMA.append(mpf.make_addplot(dataFrame.low6 ,   title="low6",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high6,   title="high6",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '15 mins'):
+                                EMA.append(mpf.make_addplot(dataFrame.low12 ,   title="low12",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high12,   title="high12",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '20 mins'):
+                                EMA.append(mpf.make_addplot(dataFrame.low12 ,   title="low12",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high12,   title="high12",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '30 mins'):
+                                EMA.append(mpf.make_addplot(dataFrame.low11 ,   title="low11",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high11,   title="high11",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '1 hour'):
+                                EMA.append(mpf.make_addplot(dataFrame.low16 ,   title="low16",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high16,   title="high16",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '2 hours'):
+                                EMA.append(mpf.make_addplot(dataFrame.low8 ,   title="low8",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high8,   title="high8",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '3 hours'):
+                                EMA.append(mpf.make_addplot(dataFrame.low30 ,   title="low30",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high30,   title="high30",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '4 hours'):
+                                EMA.append(mpf.make_addplot(dataFrame.low20 ,   title="low20",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high20,   title="high20",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                elif    (scope == '8 hours'):
+                                EMA.append(mpf.make_addplot(dataFrame.low42 ,   title="low42",   type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+                                EMA.append(mpf.make_addplot(dataFrame.high42,   title="high42",  type='line', linestyle='dashdot', alpha=0.5, width=0.5, color='#FEB2FF')) #Pink   color
+
+                
+        return EMA
+
+
+
+
 '''
         linestyle= 'dashdot'
         '-'     or 'solid',
