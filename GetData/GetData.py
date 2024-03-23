@@ -54,7 +54,7 @@ def fun (   ticker = 'goog',
     #**************************************************************************************************************************************************
     # Download Fundamentals
         if (yahoo_Fundamentals):
-            Fundamentals_yf.fun(    ticker = ticker,
+            Fundamentals_yf.fun2(    ticker = ticker,
                                     filePath = filePath,
                                     sheetName = 'Yahoo Fundamentals'
                     
@@ -171,7 +171,14 @@ def fun (   ticker = 'goog',
 
 
 
-
+def funSamaryUpdate(     ticker = 'TGL'
+                        ,fExcelPath = r"C:\Users\lenovo\Desktop\TGL\Session [20240323_051432]\TGL\OK TGL.xlsx"
+                        ,sheetName = 'Samary'
+                    ):
+    CreatExcel.funSamaryUpdate  (    ticker = ticker
+                                    ,fExcelPath = fExcelPath
+                                    ,sheetName = sheetName
+                                )
 
 
 

@@ -80,7 +80,7 @@ for ticker_index in tickersWL :
                     yahoo_Hour = True,
                     daysHours = 30,
                     yahoo_30Min = True,
-                    days30Min = 10,
+                    days30Min = 20,
                     yahoo_15Min = True,
                     days15Min = 10,
                     yahoo_5Min = True,
@@ -122,7 +122,18 @@ for ticker_index in tickersWL :
                                     '1M'     :{'SizeIndex':20, 'DurationIndex':4, 'DurationLenth': 5, 'Rolling':12, 'SheetName':'IBKR 1Month' }
                                     }
                         )
-    
+
+
+    print(pathExcel)
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    GetData.funSamaryUpdate( ticker = ticker_index
+                            ,fExcelPath = pathExcel
+                            ,sheetName = 'Samary'
+                            )
+
     IBKR.fFundamentalData(  fnFilePath = pathExcel,                         
                             fnFandaList = ['ReportSnapshot','ReportsFinSummary','ReportRatios','ReportsFinStatements','RESC']
                          )
@@ -136,14 +147,24 @@ for ticker_index in tickersWL :
     #                 imageType= '.png'
     #             )
     
-    GetChart.fun2   (   # Set Varibles
-                            #------------------------------------------------
-                            tickerName      = ticker_index,     
-                            filePathExcel   = pathExcel + ticker_index + '.xlsx',
-                            filePathChart   = pathFile,            #C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Chart test.jpg
-                            flagYahoo       = True,
-                            flagIBKR        = True,
-                            imageType       = '.png'
+    # GetChart.fun2   (   # Set Varibles
+    #                         #------------------------------------------------
+    #                         tickerName      = ticker_index,     
+    #                         filePathExcel   = pathExcel + ticker_index + '.xlsx',
+    #                         filePathChart   = pathFile,            #C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Chart test.jpg
+    #                         flagYahoo       = True,
+    #                         flagIBKR        = True,
+    #                         imageType       = '.png'
+    #                 )
+
+    GetChart.fun3   (   # Set Varibles
+                        #------------------------------------------------
+                        tickerName      = ticker_index     
+                       ,filePathExcel   = pathExcel + ticker_index + '.xlsx'
+                       ,filePathChart   = pathFile            #C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Chart test.jpg
+                       ,flagYahoo       = False
+                       ,flagIBKR        = True
+                       ,imageType       = '.png'
                     )
 
 print (f' Watch list is : ')

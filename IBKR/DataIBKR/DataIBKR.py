@@ -1,3 +1,4 @@
+import datetime
 from ibapi.client import *
 from ibapi.wrapper import *
 import pandas as pd
@@ -56,6 +57,9 @@ class IBKR(EClient, EWrapper):
             if(errorCode == 200):
                 self.xData=errorString
                 self.disconnect()
+            if(errorCode == 162):
+                # self.xData=errorString
+                self.disconnect()
 
     def nextValidId(self, orderId: int):     
         mycontract = Contract()
@@ -99,12 +103,16 @@ class IBKR(EClient, EWrapper):
 
         if(self.qSizeIndex >= 0 and self.qSizeIndex <= 17):
             #df['VWAP']                  = vwap_Temp
+            # df['CumVol']                = VWAPfun2(dfT=df)   
+            VWAPfun2(dfT=df)    ####################################################################################################################################
             df['EMA009']                = ta.trend.ema_indicator(df.Close,   9)
             df['EMA020']                = ta.trend.ema_indicator(df.Close,  20)
             df['EMA040']                = ta.trend.ema_indicator(df.Close,  40)
             df['EMA050']                = ta.trend.ema_indicator(df.Close,  50)
+            df['EMA108']                = ta.trend.ema_indicator(df.Close, 108)
             df['EMA150']                = ta.trend.ema_indicator(df.Close, 150)
             df['EMA200']                = ta.trend.ema_indicator(df.Close, 200)
+            df['EMA540']                = ta.trend.ema_indicator(df.Close, 540)
             #df['200MA_past']           = df['200MA'].shift(20)
 
         if(self.qSizeIndex >= 18 and self.qSizeIndex <= 20):
@@ -143,6 +151,7 @@ class IBKR(EClient, EWrapper):
 
         print("###################################################")
         print(df)
+        print("         Ticker is ",self.qSymbol)
         print("###################################################")
         
         filePathTicker = qfFilePath + self.qSymbol + ".xlsx"
@@ -304,13 +313,95 @@ class IBKR(EClient, EWrapper):
 
 
 
+def VWAPfun(df):
+        print("Start culclate VWAP")
+
+        oldDay = df.index[0]
+        nextDay = oldDay + dt.timedelta(days=1)
+        index1 = 0
+        vwap_Temp = []
+
+        for index2 in range (len(df.index)) :
+            if (df.index[index2] >= nextDay):
+                df_temp = df.loc[index1 : index2]
+                df_temp[ 'VWAP'] = ta.volume.volume_weighted_average_price(high=df_temp.High, low=df_temp.Low, close=df_temp.Close,  volume=df_temp.Volume,  window=1, fillna =True) 
+                vwap_Temp.append(df_temp.VWAP.to_list())
+                nextDay = df.index[index2] + dt.timedelta(days=1)
+                index1 = index2
+            # End of If Statement
+
+        index2 += 1
+        df_temp = df[index1 : index2]
+        df_temp[ 'VWAP'] = ta.volume.volume_weighted_average_price(high=df_temp.High, low=df_temp.Low, close=df_temp.Close,  volume=df_temp.Volume,  window=1, fillna =True) 
+        vwap_Temp.append(df_temp.VWAP.to_list())
+
+        #flatten a 2D list to 1D : Help Link : https://stackoverflow.com/questions/29244286/how-to-flatten-a-2d-list-to-1d-without-using-numpy
+        vwap_Temp = [j for sub in vwap_Temp for j in sub]
+
+        return vwap_Temp
 
 
 
 
+def VWAPfun2(dfT):
+        print("Start culclate VWAP")
+        df = dfT.copy()
+        df.Datetime = df.Datetime.str.replace("US/Eastern", "")
+        df.Datetime = pd.to_datetime(df.Datetime.astype('datetime64[ns]'))
+        df.set_index('Datetime', inplace = True) # Help LLink :- https://www.geeksforgeeks.org/python-pandas-dataframe-set_index/
+        #change object to float
+        # Link https://stackoverflow.com/questions/36814100/pandas-to-numeric-for-multiple-columns
+        cols = df.columns
+        df[cols] = df[cols].apply(pd.to_numeric, errors='coerce')
+        print(df)
+        print(df.dtypes)
+        dayNam = 1
+        CumVol_Temp = []
+        # vwap_Temp = []
+        # vwap_Temp1 = []
+        # vwap_Temp2 = []
+        vwap_Temp3 = []
+        
+        dates = sorted(list(set([d.date() for d in df.index])))
+        for d1 in dates:
+            d2 = d1 + datetime.timedelta(days=1)
+            print("this is data for date number : ",dayNam ," to calculate VWAP")
+            df_temp = df.loc[d1:d2]
+            
+            df_temp[ 'CumVol'] = df_temp.Volume.cumsum()
+            # df_temp[ 'VWAP'] = ta.volume.volume_weighted_average_price(high=df_temp.High, low=df_temp.Low, close=df_temp.Close,  volume=df_temp.Volume,  window=1, fillna =True) 
+            # df_temp['VWAP1'] = (((df_temp['High'] + df_temp['Low'] + df_temp['Close']) / 3) * df_temp['Volume']).cumsum() / df_temp['Volume'].cumsum()
+            # df_temp['VP'] = ((df_temp['High'] + df_temp['Low'] + df_temp['Close']) / 3) * df_temp['Volume']
+            # df_temp['VWAP2'] = df_temp['VP'].cumsum() / df_temp['Volume'].cumsum()
+            df_temp['VWAP3'] = (df_temp['wap']*df_temp['Volume']).cumsum() / df_temp['Volume'].cumsum()
 
+            CumVol_Temp.append(df_temp.CumVol.to_list())
+            # vwap_Temp.append(df_temp.VWAP.to_list())
+            # vwap_Temp1.append(df_temp.VWAP1.to_list())
+            # vwap_Temp2.append(df_temp.VWAP2.to_list())
+            vwap_Temp3.append(df_temp.VWAP3.to_list())
 
+            
+            # print(df_temp)
+            # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+            # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+            # print("$$$$$$$$$$$$$$$$$$$$$$$")
+            # print("$$$$$$$$$$$$$$")
+            dayNam += 1
+        #flatten a 2D list to 1D : Help Link : https://stackoverflow.com/questions/29244286/how-to-flatten-a-2d-list-to-1d-without-using-numpy
+        CumVol_Temp = [j for sub in CumVol_Temp for j in sub]
+        # vwap_Temp   = [j for sub in vwap_Temp   for j in sub]
+        # vwap_Temp1  = [j for sub in vwap_Temp1  for j in sub]
+        # vwap_Temp2  = [j for sub in vwap_Temp2  for j in sub]
+        vwap_Temp3  = [j for sub in vwap_Temp3  for j in sub]
 
-
+        dfT['CumVol']                = CumVol_Temp
+        # dfT['VWAP']                  = vwap_Temp
+        # dfT['VWAP1']                 = vwap_Temp1
+        # dfT['VWAP2']                 = vwap_Temp2
+        # dfT['VWAP3']                 = (dfT['VWAP']+dfT['VWAP1'])/2
+        # dfT['VWAP3']                 = ((dfT['wap']*dfT['Volume']).cumsum())* dfT['Volume'].cumsum()
+        # dfT['VWAP3']                 = vwap_Temp3
+        dfT['VWAP']                 = vwap_Temp3
 
 

@@ -81,3 +81,10 @@ def fun2 (filePath_fun, bookName = 'IBKR 1m') :
 
 
     return df
+
+
+
+
+
+
+
