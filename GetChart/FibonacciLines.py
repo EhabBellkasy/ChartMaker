@@ -166,8 +166,8 @@ def fun2(   filePath_fun
                     Low  = Fobi_Input.HighLow[fibonacciIndex]["Low"]
         else:
             print("it dont need fibonacci lines")
-            High = 0
-            Low  = 0
+            High = -100
+            Low  = -100
 
         # High=437.05
         # Low=429.05

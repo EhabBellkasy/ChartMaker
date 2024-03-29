@@ -1,6 +1,9 @@
 import pandas as pd
+import numpy as np
+import math
 import ImportData
 import openpyxl
+
 
 
 
@@ -544,12 +547,6 @@ def fun5(    filePath           = r"D:\Python Tools\ChartMaker\SourceDocuments\O
 
 #--------------------------------------------------------------------------------------------------------------------------
     
-
-
-
-
-
-
 def fTimeLable  (    f_Scope
                     ,f_HourConstant
                     ,f_MinConstant
@@ -633,206 +630,210 @@ def fTimeLable  (    f_Scope
         if(interval in ntrvlHub) :
             print("interval is ",interval)
             print("Scope is ",f_Scope)
+            if(len(inList) > 0):
+                print("Lenth of InList is :",len(inList))
+                print("First Time Lable is :",inList[0])
 
-            for i in range (len(inList)) : 
-                # Set Varibles
-                #------------------------------------------------
-                if(interval in ['1 secs','5 secs','10 secs','15 secs','30 secs','1 min','2 mins','3 mins','5 mins','10 mins','15 mins','20 mins','30 mins','1 hour',
-                                '2 hours','3 hours','4 hours','8 hours','1m','2m','5m','15m','30m','1h']
-                    ):
-                        currentSecond   = (int(inList[i][(srcIndex[source]['s1']):(srcIndex[source]["s2"])]))   
-                        currentMinute   = (int(inList[i][(srcIndex[source]["m1"]):(srcIndex[source]["m2"])]))
-                        currentHour     = (int(inList[i][(srcIndex[source]["H1"]):(srcIndex[source]["H2"])]))
-                        currentLable    =  str("%02d"%currentHour) + ':' + str("%02d"%currentMinute)      # lable HH:MM
-                
-                
-                currentDay      = (int(inList[i][(srcIndex[source]["D1"]):(srcIndex[source]["D2"])])) 
-                currentMonth    = (int(inList[i][(srcIndex[source]["M1"]):(srcIndex[source]["M2"])])) 
-                currentYear     = (int(inList[i][(srcIndex[source]["Y1"]):(srcIndex[source]["Y2"])]))  
-                #------------------------------------------------
-                if(i==0):
-                        lastDay      = currentDay 
-                        lastMonth    = currentMonth
-                        lastYear     = currentYear
-                elif(i>0):
-                        lastDay      = (int(inList[i-1][(srcIndex[source]["D1"]):(srcIndex[source]["D2"])])) 
-                        lastMonth    = (int(inList[i-1][(srcIndex[source]["M1"]):(srcIndex[source]["M2"])])) 
-                        lastYear     = (int(inList[i-1][(srcIndex[source]["Y1"]):(srcIndex[source]["Y2"])])) 
-                #------------------------------------------------
-                
-                dayLable        =  monthName[currentMonth] + '.' + str("%02d"%currentDay)        # lable MM.DD
-                yearLable       = str(currentYear) + '.' + dayLable                    # lable YYYY.MM.DD
-                #------------------------------------------------
-
-
-                if(f_Scope == 'intraday'):
-                    #__________________________________________
-                    #   Day lable:
-                    if(     currentYear  >  lastYear        #   Year   Change:
-                        or   currentMonth >  lastMonth       #   Month  Change:
-                        or   currentDay   >  lastDay         #   Day    Change:
-                       ):
-                                if(     currentYear  >  lastYear    #   Year   Change:
-                                    ):
-                                        condLable = yearLable
-                                else:
-                                        condLable = dayLable
-                                outLable["ticks"].append(i + f_leftSide)
-                                outLable["tlabs"].append("\n \n " +currentLable)
-                                outLable["mitks"].append(i-0.1)   
-                                outLable["milab"].append("\n \n " +condLable)                                                 
-                    #__________________________________________
-                    #   clock lable:
-                    elif(       (( currentSecond % f_SecConstant  ) == 0)     # Seconds   Condition
-                            &   (( currentMinute % f_MinConstant  ) == 0)     # Minutes   Condition
-                            &   (( currentHour   % f_HourConstant ) == 0)     # Hours     Condition
+                for i in range (len(inList)) : 
+                    # Set Varibles
+                    #------------------------------------------------
+                    if(interval in ['1 secs','5 secs','10 secs','15 secs','30 secs','1 min','2 mins','3 mins','5 mins','10 mins','15 mins','20 mins','30 mins','1 hour',
+                                    '2 hours','3 hours','4 hours','8 hours','1m','2m','5m','15m','30m','1h']
                         ):
-                                if(     tickFlag  == True     ):#   First  Candel:
-                                        tickFlag  =  False
-                                        condLable =  currentLable   #.replace('\n', '')
-                                else:
-                                        tickFlag  =  True
-                                        condLable =  '\n' + currentLable                                 
-                                outLable["ticks"].append(i + f_leftSide)
-                                outLable["tlabs"].append(condLable)
-                    #__________________________________________
+                            currentSecond   = (int(inList[i][(srcIndex[source]['s1']):(srcIndex[source]["s2"])]))   
+                            currentMinute   = (int(inList[i][(srcIndex[source]["m1"]):(srcIndex[source]["m2"])]))
+                            currentHour     = (int(inList[i][(srcIndex[source]["H1"]):(srcIndex[source]["H2"])]))
+                            currentLable    =  str("%02d"%currentHour) + ':' + str("%02d"%currentMinute)      # lable HH:MM
                     
-                            
-            
-                elif(f_Scope == 'daily'):
-                    #__________________________________________
-                    #   Day lable:
-                    if(     i==0                            #   First  Candel:
-                        or   currentYear  >  lastYear        #   Year   Change:
-                        or   currentMonth >  lastMonth       #   Month  Change:
-                        or   currentDay   >  lastDay         #   Day    Change:
-                       ):
+                    
+                    currentDay      = (int(inList[i][(srcIndex[source]["D1"]):(srcIndex[source]["D2"])])) 
+                    currentMonth    = (int(inList[i][(srcIndex[source]["M1"]):(srcIndex[source]["M2"])])) 
+                    currentYear     = (int(inList[i][(srcIndex[source]["Y1"]):(srcIndex[source]["Y2"])]))  
+                    #------------------------------------------------
+                    if(i==0):
+                            lastDay      = currentDay 
+                            lastMonth    = currentMonth
+                            lastYear     = currentYear
+                    elif(i>0):
+                            lastDay      = (int(inList[i-1][(srcIndex[source]["D1"]):(srcIndex[source]["D2"])])) 
+                            lastMonth    = (int(inList[i-1][(srcIndex[source]["M1"]):(srcIndex[source]["M2"])])) 
+                            lastYear     = (int(inList[i-1][(srcIndex[source]["Y1"]):(srcIndex[source]["Y2"])])) 
+                    #------------------------------------------------
+                    
+                    dayLable        =  monthName[currentMonth] + '.' + str("%02d"%currentDay)        # lable MM.DD
+                    yearLable       = str(currentYear) + '.' + dayLable                    # lable YYYY.MM.DD
+                    #------------------------------------------------
+
+
+                    if(f_Scope == 'intraday'):
+                        #__________________________________________
+                        #   Day lable:
+                        if(     currentYear  >  lastYear        #   Year   Change:
+                            or   currentMonth >  lastMonth       #   Month  Change:
+                            or   currentDay   >  lastDay         #   Day    Change:
+                        ):
+                                    if(     currentYear  >  lastYear    #   Year   Change:
+                                        ):
+                                            condLable = yearLable
+                                    else:
+                                            condLable = dayLable
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append("\n \n " +currentLable)
+                                    outLable["mitks"].append(i-0.1)   
+                                    outLable["milab"].append("\n \n " +condLable)                                                 
+                        #__________________________________________
+                        #   clock lable:
+                        elif(       (( currentSecond % f_SecConstant  ) == 0)     # Seconds   Condition
+                                &   (( currentMinute % f_MinConstant  ) == 0)     # Minutes   Condition
+                                &   (( currentHour   % f_HourConstant ) == 0)     # Hours     Condition
+                            ):
+                                    if(     tickFlag  == True     ):#   First  Candel:
+                                            tickFlag  =  False
+                                            condLable =  currentLable   #.replace('\n', '')
+                                    else:
+                                            tickFlag  =  True
+                                            condLable =  '\n' + currentLable                                 
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append(condLable)
+                        #__________________________________________
+                        
                                 
-                                if(     i==0                        #   First  Candel:
-                                    or   currentYear  >  lastYear    #   Year   Change:
-                                    ):
-                                        condLable = yearLable
-                                else:
-                                        condLable = dayLable
-                                outLable["ticks"].append(i + f_leftSide)
-                                outLable["tlabs"].append("\n \n " + currentLable)
-                                outLable["mitks"].append(i-0.1)   
-                                outLable["milab"].append("\n " + condLable)                                                 
-                    #__________________________________________
-                    #   clock lable:
-                    elif(       (( currentSecond % f_SecConstant  ) == 0)     # Seconds   Condition
-                            &   (( currentMinute % f_MinConstant  ) == 0)     # Minutes   Condition
-                            &   (( currentHour   % f_HourConstant ) == 0)     # Hours     Condition
+                
+                    elif(f_Scope == 'daily'):
+                        #__________________________________________
+                        #   Day lable:
+                        if(     i==0                            #   First  Candel:
+                            or   currentYear  >  lastYear        #   Year   Change:
+                            or   currentMonth >  lastMonth       #   Month  Change:
+                            or   currentDay   >  lastDay         #   Day    Change:
                         ):
-                                outLable["ticks"].append(i + f_leftSide)
-                                outLable["tlabs"].append(currentLable)
-                    #__________________________________________
+                                    
+                                    if(     i==0                        #   First  Candel:
+                                        or   currentYear  >  lastYear    #   Year   Change:
+                                        ):
+                                            condLable = yearLable
+                                    else:
+                                            condLable = dayLable
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append("\n \n " + currentLable)
+                                    outLable["mitks"].append(i-0.1)   
+                                    outLable["milab"].append("\n " + condLable)                                                 
+                        #__________________________________________
+                        #   clock lable:
+                        elif(       (( currentSecond % f_SecConstant  ) == 0)     # Seconds   Condition
+                                &   (( currentMinute % f_MinConstant  ) == 0)     # Minutes   Condition
+                                &   (( currentHour   % f_HourConstant ) == 0)     # Hours     Condition
+                            ):
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append(currentLable)
+                        #__________________________________________
 
 
-                elif(f_Scope == 'weekly'):
-                    #__________________________________________
-                    #   Day lable:
-                    if(         i==0                            #   First  Candel:
-                        or       currentYear  >  lastYear        #   Year   Change:
-                        or       currentMonth >  lastMonth       #   Month  Change: 
-                       ):                                
-                                if(     i==0                        #   First  Candel:
-                                    or   currentYear  >  lastYear    #   Year   Change:
-                                    ):
-                                        condLable = "\n \n " + yearLable.replace('\n', '')
-                                else:                               #   Month  Change: 
-                                        condLable = "\n \n " + dayLable.replace('\n', '')
-                                        if(i % 5 == 0):
-                                                # print("_____1_____")
-                                                if( i%2==0):                        #   First  Candel:                                                
-                                                    tCondLable = dayLable.replace('\n', '')
-                                                    # print("_____2_____")
-                                                else:
-                                                    # print("_____3_____")
-                                                    tCondLable = dayLable        
-                                                outLable["ticks"].append(i + f_leftSide)
-                                                outLable["tlabs"].append(tCondLable)
+                    elif(f_Scope == 'weekly'):
+                        #__________________________________________
+                        #   Day lable:
+                        if(         i==0                            #   First  Candel:
+                            or       currentYear  >  lastYear        #   Year   Change:
+                            or       currentMonth >  lastMonth       #   Month  Change: 
+                        ):                                
+                                    if(     i==0                        #   First  Candel:
+                                        or   currentYear  >  lastYear    #   Year   Change:
+                                        ):
+                                            condLable = "\n \n " + yearLable.replace('\n', '')
+                                    else:                               #   Month  Change: 
+                                            condLable = "\n \n " + dayLable.replace('\n', '')
+                                            if(i % 5 == 0):
+                                                    # print("_____1_____")
+                                                    if( i%2==0):                        #   First  Candel:                                                
+                                                        tCondLable = dayLable.replace('\n', '')
+                                                        # print("_____2_____")
+                                                    else:
+                                                        # print("_____3_____")
+                                                        tCondLable = dayLable        
+                                                    outLable["ticks"].append(i + f_leftSide)
+                                                    outLable["tlabs"].append(tCondLable)
 
-                                outLable["mitks"].append(i+ f_leftSide -0.2)
-                                outLable["milab"].append(condLable)
-                                                                                
-                    #__________________________________________
-                    #   Week lable:
-                    elif(       i % 5 == 0        #   Day    Change: currentDay
+                                    outLable["mitks"].append(i+ f_leftSide -0.2)
+                                    outLable["milab"].append(condLable)
+                                                                                    
+                        #__________________________________________
+                        #   Week lable:
+                        elif(       i % 5 == 0        #   Day    Change: currentDay
+                            ):
+                                    if(     i%2==0                        #   First  Candel:
+                                        # or   currentYear  >  lastYear    #   Year   Change:
+                                        ):
+                                            condLable = dayLable.replace('\n', '')
+                                    else:
+                                            condLable = dayLable        
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append(condLable)
+                        #__________________________________________
+
+
+                    elif(f_Scope == 'monthly'):
+                        #__________________________________________
+                        #   Day lable:
+                        if(         i==0                            #   First  Candel:
+                            |       currentYear  >  lastYear        #   Year   Change:
+                            |       currentMonth >  lastMonth       #   Month  Change: 
                         ):
-                                if(     i%2==0                        #   First  Candel:
-                                    # or   currentYear  >  lastYear    #   Year   Change:
-                                    ):
-                                        condLable = dayLable.replace('\n', '')
-                                else:
-                                        condLable = dayLable        
-                                outLable["ticks"].append(i + f_leftSide)
-                                outLable["tlabs"].append(condLable)
-                    #__________________________________________
+                                    
+                                    if(     i==0                        #   First  Candel:
+                                        |   currentYear  >  lastYear    #   Year   Change:
+                                        ):
+                                            condLable = yearLable
+                                    else:
+                                            condLable = dayLable
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append(condLable)                                                
+                        #__________________________________________
 
 
-                elif(f_Scope == 'monthly'):
-                    #__________________________________________
-                    #   Day lable:
-                    if(         i==0                            #   First  Candel:
-                        |       currentYear  >  lastYear        #   Year   Change:
-                        |       currentMonth >  lastMonth       #   Month  Change: 
-                       ):
-                                
-                                if(     i==0                        #   First  Candel:
-                                    |   currentYear  >  lastYear    #   Year   Change:
-                                    ):
-                                        condLable = yearLable
-                                else:
-                                        condLable = dayLable
-                                outLable["ticks"].append(i + f_leftSide)
-                                outLable["tlabs"].append(condLable)                                                
-                    #__________________________________________
-
-
-                elif(f_Scope == 'yearly'):
-                    #__________________________________________
-                    #   Day lable:
-                    if(         i==0                            #   First  Candel:
-                        |       currentYear  >  lastYear        #   Year   Change:
-                       ):
-                                outLable["ticks"].append(i + f_leftSide)
-                                outLable["tlabs"].append(yearLable)                                                
-                    #__________________________________________
-
-                elif(f_Scope == 'interday'):
-                    print("Scope is ",f_Scope)
-
-
-                '''
-                if(ntrvlHub[interval].Scope == 'intraday'):
-                    print("Scope is ",ntrvlHub[interval].Scope)
-                    if  (       (( currentSecond % ntrvlHub[interval].secConstant  ) == 0)     # Seconds   Condition
-                            &   (( currentMinute % ntrvlHub[interval].minConstant  ) == 0)     # Minutes   Condition
-                            &   (( currentHour   % ntrvlHub[interval].hourConstant ) == 0)     # Hours     Condition
+                    elif(f_Scope == 'yearly'):
+                        #__________________________________________
+                        #   Day lable:
+                        if(         i==0                            #   First  Candel:
+                            |       currentYear  >  lastYear        #   Year   Change:
                         ):
-                                currentLable =  str(currentHour) + ':' + str(currentMinute) # lable HH:MM
-                                outLable.ticks.append(i)
-                                outLable.tlabs.append(currentLable)
-                                print(i)
-                                print(currentLable) 
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append(yearLable)                                                
+                        #__________________________________________
 
-                    if  (       (i+1)in range (len(inList)) ):
-                                j=i+1 
-                                nextDay      = (int(inList[j][(srcIndex[source].D1):(srcIndex[source].D2)])) 
-                                nextMonth    = (int(inList[j][(srcIndex[source].M1):(srcIndex[source].M2)])) 
-                                nextYear     = (int(inList[j][(srcIndex[source].Y1):(srcIndex[source].Y2)]))  
-                                if(                 nextMonth>currentMonth      #   Month   changed
-                                        |           nextDay>currentDay          #   day     changed     
-                                    ): 
-                                            dayLable =  monthName[nextMonth] + '.' + str(nextDay)
-                                            if(     nextYear>currentYear):      #   year    changed 
-                                                dayLable = str(nextYear) + '.' + dayLable
-                                            outLable.mitks.append(j)
-                                            outLable.milab.append(dayLable)
- 
-                '''
+                    elif(f_Scope == 'interday'):
+                        print("Scope is ",f_Scope)
 
+
+                    '''
+                    if(ntrvlHub[interval].Scope == 'intraday'):
+                        print("Scope is ",ntrvlHub[interval].Scope)
+                        if  (       (( currentSecond % ntrvlHub[interval].secConstant  ) == 0)     # Seconds   Condition
+                                &   (( currentMinute % ntrvlHub[interval].minConstant  ) == 0)     # Minutes   Condition
+                                &   (( currentHour   % ntrvlHub[interval].hourConstant ) == 0)     # Hours     Condition
+                            ):
+                                    currentLable =  str(currentHour) + ':' + str(currentMinute) # lable HH:MM
+                                    outLable.ticks.append(i)
+                                    outLable.tlabs.append(currentLable)
+                                    print(i)
+                                    print(currentLable) 
+
+                        if  (       (i+1)in range (len(inList)) ):
+                                    j=i+1 
+                                    nextDay      = (int(inList[j][(srcIndex[source].D1):(srcIndex[source].D2)])) 
+                                    nextMonth    = (int(inList[j][(srcIndex[source].M1):(srcIndex[source].M2)])) 
+                                    nextYear     = (int(inList[j][(srcIndex[source].Y1):(srcIndex[source].Y2)]))  
+                                    if(                 nextMonth>currentMonth      #   Month   changed
+                                            |           nextDay>currentDay          #   day     changed     
+                                        ): 
+                                                dayLable =  monthName[nextMonth] + '.' + str(nextDay)
+                                                if(     nextYear>currentYear):      #   year    changed 
+                                                    dayLable = str(nextYear) + '.' + dayLable
+                                                outLable.mitks.append(j)
+                                                outLable.milab.append(dayLable)
+    
+                    '''
+            else:
+                print("No InList was Entered to Function. Lenth of InList is :",len(inList))
 
 
 
@@ -842,4 +843,527 @@ def fTimeLable  (    f_Scope
         print("source is Wrong")
 
     return outLable
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+    
+def fTimeLable2 (    f_Scope
+                    ,f_HourConstant
+                    ,f_MinConstant
+                    ,f_SecConstant
+                    ,f_leftSide
+                    ,source="IBKR"
+                    ,interval='1 min'
+                    ,inList=[]
+                ):
+    print("###-TimeLable-###")
+    
+    # Set Varibles
+    #------------------------------------------------
+
+    tickFlag=True
+
+    monthName=  [
+                 "\nworng"
+                ,"\nJan"
+                ,"\nFeb"
+                ,"\nMar"
+                ,"\nApr"
+                ,"\nMay"
+                ,"\nJun"
+                ,"\nJul"
+                ,"\nAug"
+                ,"\nSep"
+                ,"\nOct"
+                ,"\nNov"
+                ,"\nDec"
+                ,"" 
+                ]
+
+    srcIndex =  {
+                    'IBKR'  :{'Y1': 0, 'Y2':4, 'M1': 5, 'M2':7, 'D1':8, 'D2':10,  'H1':11,  'H2':13, 'm1':14, 'm2':16, 's1':17, 's2':19 },
+                    'Yahoo' :{'Y1': 0, 'Y2':4, 'M1': 5, 'M2':7, 'D1':8, 'D2':10, 'H1':11, 'H2':13, 'm1':13, 'm2':15, 's1':17, 's2':19 }
+                }
+        
+    ntrvlHub =  {
+                    '1 secs'	:{	'SheetName':'IBKR 1s'	    ,'IntervalSize':'1 min'	    ,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':1	    ,'secConstant':0.3      ,'leftSide':0	},		#	XX:XX:OO	Every 1  min
+                    '5 secs'	:{	'SheetName':'IBKR 5s'   	,'IntervalSize':'1 min'	    ,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':1	    ,'secConstant':0.3	    ,'leftSide':-0.41  },		#	XX:XX:OO	Every 1  min
+                    '10 secs'	:{	'SheetName':'IBKR 10s'  	,'IntervalSize':'1 min'	    ,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':1	    ,'secConstant':0.3	    ,'leftSide':0   },		#	XX:XX:OO	Every 1  min
+                    '15 secs'	:{	'SheetName':'IBKR 15s'  	,'IntervalSize':'1 min'	    ,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':1	    ,'secConstant':0.3	    ,'leftSide':0   },		#	XX:XX:OO	Every 1  min
+                    '30 secs'	:{	'SheetName':'IBKR 30s'  	,'IntervalSize':'5 min'	    ,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':5	    ,'secConstant':0.3	    ,'leftSide':0   },		#	XX:O5:OO	Every 5  min
+                    '1 min' 	:{	'SheetName':"IBKR 1m"   	,'IntervalSize':'5 min'	    ,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':5	    ,'secConstant':0.3	    ,'leftSide':-0.35   },		#	XX:O5:OO	Every 5  min
+                    '2 mins' 	:{	'SheetName':'IBKR 2m'   	,'IntervalSize':'10 min'	,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':10	    ,'secConstant':0.3	    ,'leftSide':0   },		#	XX:10:OO	Every 10 min
+                    '3 mins' 	:{	'SheetName':'IBKR 3m'   	,'IntervalSize':'15 min'	,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':15	    ,'secConstant':0.3	    ,'leftSide':0   },		#	XX:15:OO	Every 15 min
+                    '5 mins' 	:{	'SheetName':'IBKR 5m'   	,'IntervalSize':'15 min'	,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':15	    ,'secConstant':0.3	    ,'leftSide':-0.36   },		#	XX:15:OO	Every 15 min
+                    '10 mins'	:{	'SheetName':'IBKR 10m'  	,'IntervalSize':'30 mins'	,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':30	    ,'secConstant':0.3	    ,'leftSide':0   },		#	XX:30:OO	Every 30 min
+                    '15 mins'	:{	'SheetName':'IBKR 15m'  	,'IntervalSize':'1 hour'	,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':0   },		#	XX:OO:OO	Every 1  hour
+                    '20 mins'	:{	'SheetName':'IBKR 20m'  	,'IntervalSize':'1 hour'	,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':0   },		#	XX:OO:OO	Every 1  hour
+                    '30 mins'	:{	'SheetName':'IBKR 30m'	    ,'IntervalSize':'2 hours'	,'Scope':'intraday'	    ,'hourConstant':2	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':-0.38   },		#	O2:OO:OO	Every 2  hour
+                    '1 hour' 	:{	'SheetName':'IBKR 1H'	    ,'IntervalSize':'2 hours'	,'Scope':'intraday'	    ,'hourConstant':8	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':-0.51   },		#	O2:OO:OO	Every 2  hour
+                    '2 hours'	:{	'SheetName':'IBKR 2H'   	,'IntervalSize':'1 day'	    ,'Scope':'daily'	    ,'hourConstant':3	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':0   },		#	O4:OO:OO	Every 1  day
+                    '3 hours'	:{	'SheetName':'IBKR 3H'	    ,'IntervalSize':'1 day'	    ,'Scope':'daily'	    ,'hourConstant':13	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':0   },		#	O4:OO:OO	Every 1  day
+                    '4 hours'	:{	'SheetName':'IBKR 4H'   	,'IntervalSize':'1 day'	    ,'Scope':'daily'	    ,'hourConstant':11	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':0   },		#	O4:OO:OO	Every 1  day
+                    '8 hours'	:{	'SheetName':'IBKR 8H'	    ,'IntervalSize':'1 day'	    ,'Scope':'daily'	    ,'hourConstant':0.3	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':0   },		#	O4:OO:OO	Every 1  day
+                    '1 day' 	:{	'SheetName':'IBKR 1Day'	    ,'IntervalSize':'1 week'	,'Scope':'weekly'	    ,'hourConstant':1	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':-0.41   },		#	O4:OO:OO	Every 1  week
+                    '1W'    	:{	'SheetName':'IBKR 1week'	,'IntervalSize':'1 month'	,'Scope':'monthly'	    ,'hourConstant':1	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':0   },		#	O4:OO:OO	Every 1  month
+                    '1M'     	:{	'SheetName':'IBKR 1Month'   ,'IntervalSize':'1 year'	,'Scope':'yearly'	    ,'hourConstant':1	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':0   },		#	O4:OO:OO	Every 1  year
+                                                                                                            
+                    '1m'     	:{	'SheetName':'Yahoo 1m'	    ,'IntervalSize':'5 min'	    ,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':5	    ,'secConstant':0.3	    ,'leftSide':0   },		#	XX:O5:OO	Every 5  min
+                    '2m'     	:{	'SheetName':'Yahoo 2m'	    ,'IntervalSize':'10 min'	,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':10	    ,'secConstant':0.3	    ,'leftSide':0   },		#	XX:10:OO	Every 10 min
+                    '5m'     	:{	'SheetName':'Yahoo 5m'	    ,'IntervalSize':'15 min'	,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':15	    ,'secConstant':0.3	    ,'leftSide':0   },		#	XX:15:OO	Every 15 min
+                    '15m'   	:{	'SheetName':'Yahoo 15m'	    ,'IntervalSize':'1 hour'	,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':-0.21   },		#	XX:OO:OO	Every 1  hour
+                    '30m'   	:{	'SheetName':'Yahoo 30m'	    ,'IntervalSize':'2 hours'	,'Scope':'intraday'	    ,'hourConstant':1	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':0   },		#	O2:OO:OO	Every 2  hour
+                    '1h'     	:{	'SheetName':'Yahoo Hours'	,'IntervalSize':'2 hours'	,'Scope':'daily'	    ,'hourConstant':1	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':0   },		#	O2:OO:OO	Every 2  hour
+                    '1d'     	:{	'SheetName':'Yahoo Dayes'	,'IntervalSize':'1 week'	,'Scope':'monthly'	    ,'hourConstant':1	    ,'minConstant':0.3	    ,'secConstant':0.3	    ,'leftSide':0   }		#	O4:OO:OO	Every 1  week
+                }
+
+    outLable =  {   
+                     'ticks' :[]
+                    ,'tlabs' :[]
+                    ,'Utlabs':[]
+                    ,'mitks' :[]
+                    ,'milab' :[]
+                    ,'Umilab':[]
+                }
+
+
+    if(source in srcIndex) :
+        print("source is ",source)
+        if(interval in ntrvlHub) :
+            print("interval is ",interval)
+            print("Scope is ",f_Scope)
+            if(len(inList) > 0):
+                print("Lenth of InList is :",len(inList))
+                print("First Time Lable is :",inList[0])
+
+                for i in range (len(inList)) : 
+                    # Set Varibles
+                    #------------------------------------------------
+                    if(interval in ['1 secs','5 secs','10 secs','15 secs','30 secs','1 min','2 mins','3 mins','5 mins','10 mins','15 mins','20 mins','30 mins','1 hour',
+                                    '2 hours','3 hours','4 hours','8 hours','1m','2m','5m','15m','30m','1h']
+                        ):
+                            currentSecond   = (int(inList[i][(srcIndex[source]['s1']):(srcIndex[source]["s2"])]))   
+                            currentMinute   = (int(inList[i][(srcIndex[source]["m1"]):(srcIndex[source]["m2"])]))
+                            currentHour     = (int(inList[i][(srcIndex[source]["H1"]):(srcIndex[source]["H2"])]))
+                            currentLable    =  str("%02d"%currentHour) + ':' + str("%02d"%currentMinute)      # lable HH:MM
+                    
+                    
+                    currentDay      = (int(inList[i][(srcIndex[source]["D1"]):(srcIndex[source]["D2"])])) 
+                    currentMonth    = (int(inList[i][(srcIndex[source]["M1"]):(srcIndex[source]["M2"])])) 
+                    currentYear     = (int(inList[i][(srcIndex[source]["Y1"]):(srcIndex[source]["Y2"])]))  
+                    #------------------------------------------------
+                    if(i==0):
+                            lastDay      = currentDay 
+                            lastMonth    = currentMonth
+                            lastYear     = currentYear
+                    elif(i>0):
+                            lastDay      = (int(inList[i-1][(srcIndex[source]["D1"]):(srcIndex[source]["D2"])])) 
+                            lastMonth    = (int(inList[i-1][(srcIndex[source]["M1"]):(srcIndex[source]["M2"])])) 
+                            lastYear     = (int(inList[i-1][(srcIndex[source]["Y1"]):(srcIndex[source]["Y2"])])) 
+                    #------------------------------------------------
+                    
+                    dayLable        =  monthName[currentMonth] + '.' + str("%02d"%currentDay)        # lable MM.DD
+                    yearLable       = str(currentYear) + '.' + dayLable                    # lable YYYY.MM.DD
+                    #------------------------------------------------
+
+
+                    if(f_Scope == 'intraday'):
+                        #__________________________________________
+                        #   Day lable:
+                        if(     currentYear  >  lastYear        #   Year   Change:
+                            or   currentMonth >  lastMonth       #   Month  Change:
+                            or   currentDay   >  lastDay         #   Day    Change:
+                        ):
+                                    if(     currentYear  >  lastYear    #   Year   Change:
+                                        ):
+                                            condLable = yearLable
+                                    else:
+                                            condLable = dayLable
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append("\n \n " +currentLable)
+                                    outLable["Utlabs"].append(currentLable + " \n \n" )
+                                    outLable["mitks"].append(i-0.1)   
+                                    outLable["milab"].append("\n \n " +condLable)
+                                    outLable["Umilab"].append(condLable + " \n \n \n" )                                                 
+                        #__________________________________________
+                        #   clock lable:
+                        elif(       (( currentSecond % f_SecConstant  ) == 0)     # Seconds   Condition
+                                &   (( currentMinute % f_MinConstant  ) == 0)     # Minutes   Condition
+                                &   (( currentHour   % f_HourConstant ) == 0)     # Hours     Condition
+                            ):
+                                    if(     tickFlag  == True     ):#   First  Candel:
+                                            tickFlag  =  False
+                                            condLable =  currentLable   #.replace('\n', '')
+                                            condLable1 =  currentLable   #.replace('\n', '')
+                                    else:
+                                            tickFlag  =  True
+                                            condLable =  '\n' + currentLable 
+                                            condLable1 = currentLable + '\n'                                 
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append(condLable)
+                                    outLable["Utlabs"].append(condLable1)
+                        #__________________________________________
+                        
+                                
+                
+                    elif(f_Scope == 'daily'):
+                        #__________________________________________
+                        #   Day lable:
+                        if(     i==0                            #   First  Candel:
+                            or   currentYear  >  lastYear        #   Year   Change:
+                            or   currentMonth >  lastMonth       #   Month  Change:
+                            or   currentDay   >  lastDay         #   Day    Change:
+                        ):
+                                    
+                                    if(     i==0                        #   First  Candel:
+                                        or   currentYear  >  lastYear    #   Year   Change:
+                                        ):
+                                            condLable = yearLable
+                                    else:
+                                            condLable = dayLable
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append("\n \n " + currentLable)
+                                    outLable["Utlabs"].append(currentLable + " \n \n" )
+                                    outLable["mitks"].append(i-0.1)   
+                                    outLable["milab"].append("\n " + condLable)
+                                    outLable["Umilab"].append(condLable + " \n")                                                 
+                        #__________________________________________
+                        #   clock lable:
+                        elif(       (( currentSecond % f_SecConstant  ) == 0)     # Seconds   Condition
+                                &   (( currentMinute % f_MinConstant  ) == 0)     # Minutes   Condition
+                                &   (( currentHour   % f_HourConstant ) == 0)     # Hours     Condition
+                            ):
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append(currentLable)
+                        #__________________________________________
+
+
+                    elif(f_Scope == 'weekly'):
+                        #__________________________________________
+                        #   Day lable:
+                        if(         i==0                            #   First  Candel:
+                            or       currentYear  >  lastYear        #   Year   Change:
+                            or       currentMonth >  lastMonth       #   Month  Change: 
+                        ):                                
+                                    if(     i==0                        #   First  Candel:
+                                        or   currentYear  >  lastYear    #   Year   Change:
+                                        ):
+                                            condLable = "\n \n " + yearLable.replace('\n', '')
+                                            condLable1 = yearLable.replace('\n', '') + "\n \n " 
+                                    else:                               #   Month  Change: 
+                                            condLable = "\n \n " + dayLable.replace('\n', '')
+                                            condLable1 = dayLable.replace('\n', '') + "\n \n "
+                                            if(i % 5 == 0):
+                                                    # print("_____1_____")
+                                                    if( i%2==0):                        #   First  Candel:                                                
+                                                        tCondLable = dayLable.replace('\n', '')
+                                                        tCondLable1 = dayLable.replace('\n', '')
+                                                        # print("_____2_____")
+                                                    else:
+                                                        # print("_____3_____")
+                                                        tCondLable = dayLable 
+                                                        tCondLable1 = dayLable.replace('\n', '') + ' \n'       
+                                                    outLable["ticks"].append(i + f_leftSide)
+                                                    outLable["tlabs"].append(tCondLable)
+                                                    outLable["Utlabs"].append(tCondLable1)
+
+                                    outLable["mitks"].append(i+ f_leftSide -0.2)
+                                    outLable["milab"].append(condLable)
+                                    outLable["Umilab"].append(condLable1)
+                                                                                    
+                        #__________________________________________
+                        #   Week lable:
+                        elif(       i % 5 == 0        #   Day    Change: currentDay
+                            ):
+                                    if(     i%2==0                        #   First  Candel:
+                                        # or   currentYear  >  lastYear    #   Year   Change:
+                                        ):
+                                            condLable = dayLable.replace('\n', '')
+                                            CondLable1 = dayLable.replace('\n', '')
+                                    else:
+                                            condLable = dayLable
+                                            CondLable1 = dayLable.replace('\n', '') + ' \n'        
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append(condLable)
+                                    outLable["Utlabs"].append(CondLable1)
+                        #__________________________________________
+
+
+                    elif(f_Scope == 'monthly'):
+                        #__________________________________________
+                        #   Day lable:
+                        if(         i==0                            #   First  Candel:
+                            |       currentYear  >  lastYear        #   Year   Change:
+                            |       currentMonth >  lastMonth       #   Month  Change: 
+                        ):
+                                    
+                                    if(     i==0                        #   First  Candel:
+                                        |   currentYear  >  lastYear    #   Year   Change:
+                                        ):
+                                            condLable = yearLable
+                                    else:
+                                            condLable = dayLable
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append(condLable)
+                                    outLable["Utlabs"].append(condLable)                                                
+                        #__________________________________________
+
+
+                    elif(f_Scope == 'yearly'):
+                        #__________________________________________
+                        #   Day lable:
+                        if(         i==0                            #   First  Candel:
+                            |       currentYear  >  lastYear        #   Year   Change:
+                        ):
+                                    outLable["ticks"].append(i + f_leftSide)
+                                    outLable["tlabs"].append(yearLable)
+                                    outLable["Utlabs"].append(yearLable)                                                
+                        #__________________________________________
+
+                    elif(f_Scope == 'interday'):
+                        print("Scope is ",f_Scope)
+
+
+                    '''
+                    if(ntrvlHub[interval].Scope == 'intraday'):
+                        print("Scope is ",ntrvlHub[interval].Scope)
+                        if  (       (( currentSecond % ntrvlHub[interval].secConstant  ) == 0)     # Seconds   Condition
+                                &   (( currentMinute % ntrvlHub[interval].minConstant  ) == 0)     # Minutes   Condition
+                                &   (( currentHour   % ntrvlHub[interval].hourConstant ) == 0)     # Hours     Condition
+                            ):
+                                    currentLable =  str(currentHour) + ':' + str(currentMinute) # lable HH:MM
+                                    outLable.ticks.append(i)
+                                    outLable.tlabs.append(currentLable)
+                                    print(i)
+                                    print(currentLable) 
+
+                        if  (       (i+1)in range (len(inList)) ):
+                                    j=i+1 
+                                    nextDay      = (int(inList[j][(srcIndex[source].D1):(srcIndex[source].D2)])) 
+                                    nextMonth    = (int(inList[j][(srcIndex[source].M1):(srcIndex[source].M2)])) 
+                                    nextYear     = (int(inList[j][(srcIndex[source].Y1):(srcIndex[source].Y2)]))  
+                                    if(                 nextMonth>currentMonth      #   Month   changed
+                                            |           nextDay>currentDay          #   day     changed     
+                                        ): 
+                                                dayLable =  monthName[nextMonth] + '.' + str(nextDay)
+                                                if(     nextYear>currentYear):      #   year    changed 
+                                                    dayLable = str(nextYear) + '.' + dayLable
+                                                outLable.mitks.append(j)
+                                                outLable.milab.append(dayLable)
+    
+                    '''
+            else:
+                print("No InList was Entered to Function. Lenth of InList is :",len(inList))
+
+
+
+        else:
+            print("interval is Wrong")
+    else:
+        print("source is Wrong")
+
+    return outLable
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+def LabelPrice  (    pMax = 6
+                    ,pMin = 2
+                ):
+    print("Calculate Price Label")
+    outLable =  {   
+                    'ticks':[],
+                    'tlabs':[],
+                    'mitks':[],
+                    'milab':[]
+                }
+    pDlt = pMax - pMin
+    pInc = 0.05
+    pDec = "2"    # "Decimal point"
+    pStr = ((pMin*10**1)//1)/(10**1)       # math.floor(pMin) 
+    pEnd = ((pMax*10**1)//1)/(10**1)       #  math.ceil(pMax)
+            
+    if (pMax < 1):
+        pInc = 00.0001      #   max < 1
+        pDec = "4"
+        pStr = round(pMin, 2)
+        pEnd = round(pMax, 2)
+        round(pMax, 1)
+    elif((pDlt < 0.40) and (pMax > 1)):
+        pInc = 00.01        #   Dlt = 0.40
+    elif(pDlt <= 2 and pDlt > 0.40):
+        pInc = 00.05        #   Dlt = 0.40
+    elif(pDlt <= 4 and pDlt > 2):
+        pInc = 00.10        #   Dlt = 0.40
+    elif(pDlt <= 10 and pDlt > 4):
+        pInc = 00.25        #   Dlt = 0.40
+    elif(pDlt <= 20 and pDlt > 10):
+        pInc = 00.50        #   Dlt = 0.40
+    elif(pDlt <= 40 and pDlt > 20):
+        pInc = 01.00        #   Dlt = 0.40
+    elif(pDlt <= 100 and pDlt > 40):
+        pInc = 02.50        #   Dlt = 0.40
+    elif(pDlt <= 200 and pDlt > 100):
+        pInc = 05.00        #   Dlt = 0.40
+    elif(pDlt <= 400 and pDlt > 200):
+        pInc = 10.00        #   Dlt = 0.40
+
+    
+    print(pMax)
+    print(pMin)
+    print(pDlt)
+    print(pInc)
+    print(pDec)
+    # print()
+    # print()
+    
+    
+    outLable["ticks"] = np.arange(pStr,pEnd,pInc)
+
+    # outLable["ticks"] = outLable["ticks"][::-1]
+    
+    pDec = "%." + pDec + "f"             #   "%.2f" % a
+    outLable["tlabs"] =  [(pDec % x) for x in outLable["ticks"]]
+    
+    print(outLable["ticks"])
+    print(outLable["tlabs"])
+
+
+
+    print(outLable["ticks"])
+    print(outLable["tlabs"])
+
+    return outLable
+
+#--------------------------------------------------------------------------------------------------------------------------
+   
+def LabelPrice5 (    pMax = 6
+                    ,pMin = 2
+                ):
+    print("Calculate Price Label")
+    #__________________________________________________________________________________________________________________
+    # Set Varibles:-
+    pDlt = round(pMax - pMin,4)
+    ntrvIndex = 'Inc00_05'
+    outLable =  {   
+                    'ticks':[],
+                    'tlabs':[],
+                    'mitks':[],
+                    'milab':[]
+                }
+    ntrvlHub =  {
+                     'Inc00_0001'	:{	'p_Incerement':00.0001	    ,'p_Decimals':'4'	    ,'n_Decimals':4	    ,'n_Integers':0	    	}		#	pInc = 00.0001 
+                    ,'Inc00_01'	    :{	'p_Incerement':00.01	    ,'p_Decimals':'2'	    ,'n_Decimals':2	    ,'n_Integers':0	    	}		#	pInc = 00.01
+                    ,'Inc00_05'	    :{	'p_Incerement':00.05	    ,'p_Decimals':'2'	    ,'n_Decimals':2	    ,'n_Integers':0	    	}		#	pInc = 00.05
+                    ,'Inc00_10'	    :{	'p_Incerement':00.10	    ,'p_Decimals':'2'	    ,'n_Decimals':2	    ,'n_Integers':0	    	}		#	pInc = 00.10
+                    ,'Inc00_25'	    :{	'p_Incerement':00.25	    ,'p_Decimals':'2'	    ,'n_Decimals':2	    ,'n_Integers':0	    	}		#	pInc = 00.25
+                    ,'Inc00_50'	    :{	'p_Incerement':00.50	    ,'p_Decimals':'2'	    ,'n_Decimals':2	    ,'n_Integers':0	    	}		#	pInc = 00.50
+                    ,'Inc01_00'	    :{	'p_Incerement':01.00	    ,'p_Decimals':'2'	    ,'n_Decimals':2	    ,'n_Integers':0	    	}		#	pInc = 01.00
+                    ,'Inc02_50'	    :{	'p_Incerement':02.50	    ,'p_Decimals':'2'	    ,'n_Decimals':2	    ,'n_Integers':1	    	}		#	pInc = 02.50
+                    ,'Inc05_00'	    :{	'p_Incerement':05.00	    ,'p_Decimals':'2'	    ,'n_Decimals':2	    ,'n_Integers':1	    	}		#	pInc = 05.00
+                    ,'Inc10_00'	    :{	'p_Incerement':10.00	    ,'p_Decimals':'2'	    ,'n_Decimals':2	    ,'n_Integers':2	    	}		#	pInc = 10.00
+                    ,'Inc25_00'	    :{	'p_Incerement':25.00	    ,'p_Decimals':'2'	    ,'n_Decimals':2	    ,'n_Integers':2	    	}		#	pInc = 25.00
+                    ,'Inc50_00'	    :{	'p_Incerement':50.00	    ,'p_Decimals':'2'	    ,'n_Decimals':2	    ,'n_Integers':2	    	}		#	pInc = 50.00 
+                   
+
+                }                
+    if (pDlt > 0):
+        #__________________________________________________________________________________________________________________
+        # Choose Interval:- 
+        if  (pMax < 1                   ) : ntrvIndex = 'Inc00_0001'  # pInc = 00.0001 
+        elif(pDlt < 0.40 and pMax > 1   ) : ntrvIndex = 'Inc00_01'	  # pInc = 00.01
+        elif(pDlt <= 2   and pDlt > 0.40) : ntrvIndex = 'Inc00_05'    # pInc = 00.05 
+        elif(pDlt <= 4   and pDlt > 2   ) : ntrvIndex = 'Inc00_10'    # pInc = 00.10 
+        elif(pDlt <= 10  and pDlt > 4   ) : ntrvIndex = 'Inc00_25'    # pInc = 00.25 
+        elif(pDlt <= 20  and pDlt > 10  ) : ntrvIndex = 'Inc00_50'    # pInc = 00.50
+        elif(pDlt <= 40  and pDlt > 20  ) : ntrvIndex = 'Inc01_00'    # pInc = 01.00         
+        elif(pDlt <= 100 and pDlt > 40  ) : ntrvIndex = 'Inc02_50'    # pInc = 02.50 
+        elif(pDlt <= 200 and pDlt > 100 ) : ntrvIndex = 'Inc05_00'    # pInc = 05.00 
+        elif(pDlt <= 400 and pDlt > 200 ) : ntrvIndex = 'Inc10_00'    # pInc = 10.00
+        elif(                pDlt > 400 ) : ntrvIndex = 'Inc25_00'    # pInc = 25.00 
+        #__________________________________________________________________________________________________________________    
+        # Extract parameters        
+        pMax = float(pMax)
+        pMin = float(pMin)
+
+        pInc = ntrvlHub[ntrvIndex]['p_Incerement']
+        pDec = ntrvlHub[ntrvIndex]['p_Decimals']    # "Decimal point"
+
+        n_decimals = ntrvlHub[ntrvIndex]['n_Decimals']
+        n_Integers = ntrvlHub[ntrvIndex]['n_Integers']
+        #__________________________________________________________________________________________________________________    
+        # Calculate Start and End range of Price Label
+        pDN = round((pMin%(10**n_Integers)),n_decimals) 
+        pUP = round((pMax%(10**n_Integers)),n_decimals) 
+            
+        pStr = round( pMin + (pInc - (pDN%pInc)) ,n_decimals)
+        pEnd = round( pMax + (pInc - (pUP%pInc)) ,n_decimals)
+        #__________________________________________________________________________________________________________________    
+        # Calculate Price Label and Prepare Output
+        outLable["ticks"] = np.arange(pStr,pEnd,pInc)
+        
+        pDec = "%." + pDec + "f"             #   "%.2f" % a
+        outLable["tlabs"] =  [(pDec % x) for x in outLable["ticks"]]    
+        #__________________________________________________________________________________________________________________
+        # Print out Data
+        print(outLable["ticks"])
+        print(outLable["tlabs"])
+
+        print("____________")
+        print("Min:",pMin,"|Max:",pMax,"|Dlt:",pDlt,"|Inc:",pInc,"|Dec:",pDec)
+        print("pStr=",pStr,"pDN=",pDN,"     |pEnd=",pEnd,"|pUP=",pUP)
+        print(ntrvIndex)
+        print("++++++++++++")
+        # print()
+    #__________________________________________________________________________________________________________________
+    else:
+        print ("Wrong InPut")
+        print("Min:",pMin,"|Max:",pMax,"|Dlt:",pDlt)
+    #__________________________________________________________________________________________________________________
+    return outLable
+    #__________________________________________________________________________________________________________________
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
 

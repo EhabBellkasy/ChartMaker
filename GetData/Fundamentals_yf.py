@@ -115,7 +115,9 @@ def fun2 (   ticker = 'goog',
 
         df = pd.DataFrame(columns=['INDEX','Data','PremarketHigh','High','Low','Open','Close','Previos_Close','Volume','H_Vol','L_Vol' ])
         df.INDEX = index
+    
 
+    
     df.to_excel( filePathTemp , sheetName)
     book2 = openpyxl.load_workbook(filePathTemp).active
     book2._parent = book

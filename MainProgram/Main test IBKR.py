@@ -124,11 +124,11 @@ for ticker_index in tickersWL :
                         )
 
 
-    print(pathExcel)
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+   #  print(pathExcel)
+   #  print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+   #  print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+   #  print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+   #  print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
     GetData.funSamaryUpdate( ticker = ticker_index
                             ,fExcelPath = pathExcel
                             ,sheetName = 'Samary'
@@ -157,7 +157,7 @@ for ticker_index in tickersWL :
     #                         imageType       = '.png'
     #                 )
 
-    GetChart.fun3   (   # Set Varibles
+    GetChart.fun5   (   # Set Varibles
                         #------------------------------------------------
                         tickerName      = ticker_index     
                        ,filePathExcel   = pathExcel + ticker_index + '.xlsx'
