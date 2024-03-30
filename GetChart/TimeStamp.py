@@ -1360,8 +1360,111 @@ def LabelPrice5 (    pMax = 6
 
 #--------------------------------------------------------------------------------------------------------------------------
 
+def LabelPrice6 (    pMax = 6
+                    ,pMin = 2
+                ):
+    print("Calculate Price Label")
+    #__________________________________________________________________________________________________________________
+    # Set Varibles:-
+    pDlt = round(pMax - pMin,4)
+    ntrvIndex = 'Inc00_05'
+    outLable =  {   
+                    'ticks':[],
+                    'tlabs':[],
+                    'mitks':[],
+                    'milab':[]
+                }
+    ntrvlHub =  {
+                     "Inc00_0001"	:{	"p_Incerement":	00.0001	    ,"p_Decimals": "4"	  ,"n_Decimals": 4    ,"n_Integers": 0	  ,"MAX": 0000.0036	  ,"MIN":	0000.0000	}		#	pInc = 	00.0001
+                    ,"Inc00_0005"	:{	"p_Incerement":	00.0005	    ,"p_Decimals": "4"	  ,"n_Decimals": 4	  ,"n_Integers": 0	  ,"MAX": 0000.0190	  ,"MIN":	0000.0036	}		#	pInc = 	00.0005
+                    ,"Inc00_0010"	:{	"p_Incerement":	00.0010	    ,"p_Decimals": "4"	  ,"n_Decimals": 4    ,"n_Integers": 0	  ,"MAX": 0000.0370	  ,"MIN":	0000.0190	}		#	pInc = 	00.0010
+                    ,"Inc00_0025"	:{	"p_Incerement":	00.0025	    ,"p_Decimals": "4"	  ,"n_Decimals": 4	  ,"n_Integers": 0	  ,"MAX": 0000.0925	  ,"MIN":	0000.0370	}		#	pInc = 	00.0025
+                    ,"Inc00_0050"	:{	"p_Incerement":	00.0050	    ,"p_Decimals": "4"	  ,"n_Decimals": 4	  ,"n_Integers": 0	  ,"MAX": 0000.1800	  ,"MIN":	0000.0925	}		#	pInc = 	00.0050
+                    ,"Inc00_0100"	:{	"p_Incerement":	00.0100	    ,"p_Decimals": "4"	  ,"n_Decimals": 4	  ,"n_Integers": 0	  ,"MAX": 0000.3700	  ,"MIN":	0000.1800	}		#	pInc = 	00.0100
+                    ,"Inc00_0250"	:{	"p_Incerement":	00.0250	    ,"p_Decimals": "4"	  ,"n_Decimals": 4	  ,"n_Integers": 0	  ,"MAX": 0000.9250	  ,"MIN":	0000.3700	}		#	pInc = 	00.0250
+                    ,"Inc00_0500"	:{	"p_Incerement":	00.0500	    ,"p_Decimals": "4"	  ,"n_Decimals": 4	  ,"n_Integers": 0	  ,"MAX": 0001.8500	  ,"MIN":	0000.9250	}		#	pInc = 	00.0500
+                    ,"Inc00_1000"	:{	"p_Incerement":	00.1000	    ,"p_Decimals": "4"	  ,"n_Decimals": 4	  ,"n_Integers": 0	  ,"MAX": 0003.7000	  ,"MIN":	0001.8500	}		#	pInc = 	00.1000
+    
+                    ,"Inc00_01"	    :{	"p_Incerement":	00.0100	    ,"p_Decimals": "2"	  ,"n_Decimals": 2	  ,"n_Integers": 0	  ,"MAX": 0000.4000	  ,"MIN":	0000.0000	}		#	pInc = 	00.0100
+                    ,"Inc00_05"	    :{	"p_Incerement":	00.0500	    ,"p_Decimals": "2"	  ,"n_Decimals": 2	  ,"n_Integers": 0	  ,"MAX": 0002.0000	  ,"MIN":	0000.4000	}		#	pInc = 	00.0500
+                    ,"Inc00_10"	    :{	"p_Incerement":	00.1000	    ,"p_Decimals": "2"	  ,"n_Decimals": 2	  ,"n_Integers": 0	  ,"MAX": 0004.0000	  ,"MIN":	0002.0000	}		#	pInc = 	00.1000
+                    ,"Inc00_25"	    :{	"p_Incerement":	00.2500	    ,"p_Decimals": "2"	  ,"n_Decimals": 2	  ,"n_Integers": 0	  ,"MAX": 0010.0000	  ,"MIN":	0004.0000	}		#	pInc = 	00.2500
+                    ,"Inc00_50"	    :{	"p_Incerement":	00.5000	    ,"p_Decimals": "2"	  ,"n_Decimals": 2	  ,"n_Integers": 0	  ,"MAX": 0020.0000	  ,"MIN":	0010.0000	}		#	pInc = 	00.5000
+                    ,"Inc01_00"	    :{	"p_Incerement":	01.0000	    ,"p_Decimals": "2"	  ,"n_Decimals": 2	  ,"n_Integers": 0	  ,"MAX": 0040.0000	  ,"MIN":	0020.0000	}		#	pInc = 	01.0000
+                    ,"Inc02_50"	    :{	"p_Incerement":	02.5000	    ,"p_Decimals": "2"	  ,"n_Decimals": 2	  ,"n_Integers": 1	  ,"MAX": 0100.0000	  ,"MIN":	0040.0000	}		#	pInc = 	02.5000
+                    ,"Inc05_00"	    :{	"p_Incerement":	05.0000	    ,"p_Decimals": "2"	  ,"n_Decimals": 2	  ,"n_Integers": 1	  ,"MAX": 0200.0000	  ,"MIN":	0100.0000	}		#	pInc = 	05.0000
+                    ,"Inc10_00"	    :{	"p_Incerement":	10.0000	    ,"p_Decimals": "2"	  ,"n_Decimals": 2	  ,"n_Integers": 2	  ,"MAX": 0400.0000	  ,"MIN":	0200.0000	}		#	pInc = 	10.0000
+                    ,"Inc25_00"	    :{	"p_Incerement":	25.0000	    ,"p_Decimals": "2"	  ,"n_Decimals": 2	  ,"n_Integers": 2	  ,"MAX": 0925.0000	  ,"MIN":	0400.0000	}		#	pInc = 	25.0000
+                    ,"Inc50_00"	    :{	"p_Incerement":	50.0000	    ,"p_Decimals": "2"	  ,"n_Decimals": 2	  ,"n_Integers": 2	  ,"MAX": 1800.0000	  ,"MIN":	0925.0000	}		#	pInc = 	50.0000                   
+                }                
+    if (pDlt > 0):
+        #__________________________________________________________________________________________________________________
+        # Choose Interval:- 
+        if  (pMax < 1 ) : 
+            if  (pDlt <= ntrvlHub["Inc00_0001"]["MAX"]  and  pDlt > ntrvlHub["Inc00_0001"]["MIN"]  ):ntrvIndex = 'Inc00_0001'   # pInc = 00.0001 
+            elif(pDlt <= ntrvlHub["Inc00_0005"]["MAX"]  and  pDlt > ntrvlHub["Inc00_0005"]["MIN"]  ):ntrvIndex = 'Inc00_0005'   # pInc = 00.0005
+            elif(pDlt <= ntrvlHub["Inc00_0010"]["MAX"]  and  pDlt > ntrvlHub["Inc00_0010"]["MIN"]  ):ntrvIndex = 'Inc00_0010'   # pInc = 00.0010
+            elif(pDlt <= ntrvlHub["Inc00_0025"]["MAX"]  and  pDlt > ntrvlHub["Inc00_0025"]["MIN"]  ):ntrvIndex = 'Inc00_0025'   # pInc = 00.0025
+            elif(pDlt <= ntrvlHub["Inc00_0050"]["MAX"]  and  pDlt > ntrvlHub["Inc00_0050"]["MIN"]  ):ntrvIndex = 'Inc00_0050'   # pInc = 00.0050
+            elif(pDlt <= ntrvlHub["Inc00_0100"]["MAX"]  and  pDlt > ntrvlHub["Inc00_0100"]["MIN"]  ):ntrvIndex = 'Inc00_0100'   # pInc = 00.0100
+            elif(pDlt <= ntrvlHub["Inc00_0250"]["MAX"]  and  pDlt > ntrvlHub["Inc00_0250"]["MIN"]  ):ntrvIndex = 'Inc00_0250'   # pInc = 00.0250
+            elif(pDlt <= ntrvlHub["Inc00_0500"]["MAX"]  and  pDlt > ntrvlHub["Inc00_0500"]["MIN"]  ):ntrvIndex = 'Inc00_0500'   # pInc = 00.0500
+            elif(pDlt <= ntrvlHub["Inc00_1000"]["MAX"]  and  pDlt > ntrvlHub["Inc00_1000"]["MIN"]  ):ntrvIndex = 'Inc00_1000'   # pInc = 0001000                        
+        elif(pMax >= 1 ) :     
+            if  (pDlt <= ntrvlHub["Inc00_01"]["MAX"]    and  pDlt > ntrvlHub["Inc00_01"]["MIN"]    ):ntrvIndex = 'Inc00_01'     # pInc = 00.01
+            elif(pDlt <= ntrvlHub["Inc00_05"]["MAX"]    and  pDlt > ntrvlHub["Inc00_05"]["MIN"]    ):ntrvIndex = 'Inc00_05'     # pInc = 00.05
+            elif(pDlt <= ntrvlHub["Inc00_10"]["MAX"]    and  pDlt > ntrvlHub["Inc00_10"]["MIN"]    ):ntrvIndex = 'Inc00_10'     # pInc = 00.10
+            elif(pDlt <= ntrvlHub["Inc00_25"]["MAX"]    and  pDlt > ntrvlHub["Inc00_25"]["MIN"]    ):ntrvIndex = 'Inc00_25'     # pInc = 00.25
+            elif(pDlt <= ntrvlHub["Inc00_50"]["MAX"]    and  pDlt > ntrvlHub["Inc00_50"]["MIN"]    ):ntrvIndex = 'Inc00_50'     # pInc = 00.50
+            elif(pDlt <= ntrvlHub["Inc01_00"]["MAX"]    and  pDlt > ntrvlHub["Inc01_00"]["MIN"]    ):ntrvIndex = 'Inc01_00'     # pInc = 01.00
+            elif(pDlt <= ntrvlHub["Inc02_50"]["MAX"]    and  pDlt > ntrvlHub["Inc02_50"]["MIN"]    ):ntrvIndex = 'Inc02_50'     # pInc = 02.50
+            elif(pDlt <= ntrvlHub["Inc05_00"]["MAX"]    and  pDlt > ntrvlHub["Inc05_00"]["MIN"]    ):ntrvIndex = 'Inc05_00'     # pInc = 05.00
+            elif(pDlt <= ntrvlHub["Inc10_00"]["MAX"]    and  pDlt > ntrvlHub["Inc10_00"]["MIN"]    ):ntrvIndex = 'Inc10_00'     # pInc = 10.00
+            elif(pDlt <= ntrvlHub["Inc25_00"]["MAX"]    and  pDlt > ntrvlHub["Inc25_00"]["MIN"]    ):ntrvIndex = 'Inc25_00'     # pInc = 25.00
+            elif(pDlt <= ntrvlHub["Inc50_00"]["MAX"]    and  pDlt > ntrvlHub["Inc50_00"]["MIN"]    ):ntrvIndex = 'Inc50_00'     # pInc = 50.00
+        #__________________________________________________________________________________________________________________    
+        # Extract parameters        
+        pMax = float(pMax)
+        pMin = float(pMin)
 
+        pInc = ntrvlHub[ntrvIndex]['p_Incerement']
+        pDec = ntrvlHub[ntrvIndex]['p_Decimals']    # "Decimal point"
 
+        n_decimals = ntrvlHub[ntrvIndex]['n_Decimals']
+        n_Integers = ntrvlHub[ntrvIndex]['n_Integers']
+        #__________________________________________________________________________________________________________________    
+        # Calculate Start and End range of Price Label
+        pDN = round((pMin%(10**n_Integers)),n_decimals) 
+        pUP = round((pMax%(10**n_Integers)),n_decimals) 
+            
+        pStr = round( pMin + (pInc - (pDN%pInc)) ,n_decimals)
+        pEnd = round( pMax + (pInc - (pUP%pInc)) ,n_decimals)
+        #__________________________________________________________________________________________________________________    
+        # Calculate Price Label and Prepare Output
+        outLable["ticks"] = np.arange(pStr,pEnd,pInc)
+        
+        pDec = "%." + pDec + "f"             #   "%.2f" % a
+        outLable["tlabs"] =  [(pDec % x) for x in outLable["ticks"]]    
+        #__________________________________________________________________________________________________________________
+        # Print out Data
+        print(outLable["ticks"])
+        print(outLable["tlabs"])
+
+        print("____________")
+        print("Min:",pMin,"|Max:",pMax,"|Dlt:",pDlt,"|Inc:",pInc,"|Dec:",pDec)
+        print("pStr=",pStr,"pDN=",pDN,"     |pEnd=",pEnd,"|pUP=",pUP)
+        print(ntrvIndex)
+        print("++++++++++++")
+        # print()
+    #__________________________________________________________________________________________________________________
+    else:
+        print ("Wrong InPut")
+        print("Min:",pMin,"|Max:",pMax,"|Dlt:",pDlt)
+    #__________________________________________________________________________________________________________________
+    return outLable
+    #__________________________________________________________________________________________________________________
+
+#--------------------------------------------------------------------------------------------------------------------------
 
 
 
