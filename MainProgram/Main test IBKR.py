@@ -157,7 +157,7 @@ for ticker_index in tickersWL :
     #                         imageType       = '.png'
     #                 )
 
-    GetChart.fun6   (   # Set Varibles
+    GetChart.fun7   (   # Set Varibles
                         #------------------------------------------------
                         tickerName      = ticker_index     
                        ,filePathExcel   = pathExcel + ticker_index + '.xlsx'

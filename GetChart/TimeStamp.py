@@ -434,18 +434,18 @@ def fun5(    filePath           = r"D:\Python Tools\ChartMaker\SourceDocuments\O
             ,DaySheetName       = "IBKR 1Day" 
             ,scope              =  "1m" # ["5s","1m","5m","30m","1h","1d"]  
             ,scopeBook          = {
-                                     "5s":"5s"
-                                    ,'5 secs':"5s"
-                                    ,"1m":"1m"
-                                    ,'1 min':"1m"
-                                    ,"5m":"5m"
-                                    ,'5 mins':"5m"
-                                    ,"30m":"30m"
-                                    ,'30 mins':"30m"
-                                    ,"1h":"1h"
-                                    ,'1 hour':"1h"
-                                    ,"1d":"1d" 
-                                    ,'1 day':"1d" 
+                                     "5s"       :"5s"
+                                    ,'5 secs'   :"5s"
+                                    ,"1m"       :"1m"
+                                    ,'1 min'    :"1m"
+                                    ,"5m"       :"5m"
+                                    ,'5 mins'   :"5m"
+                                    ,"30m"      :"30m"
+                                    ,'30 mins'  :"30m"
+                                    ,"1h"       :"1h"
+                                    ,'1 hour'   :"1h"
+                                    ,"1d"       :"1d" 
+                                    ,'1 day'    :"1d" 
                                 } 
       
         ):
@@ -546,7 +546,149 @@ def fun5(    filePath           = r"D:\Python Tools\ChartMaker\SourceDocuments\O
             #----------------------------------------------------------------------------------------------------------------------------------------------     
 
 #--------------------------------------------------------------------------------------------------------------------------
-    
+
+def fun6(    filePath           = r"C:\Users\lenovo\Desktop\TGL\BCG\OK BCG.xlsx"
+            ,timeStampPath      = r"D:\Python Tools\ChartMaker\SourceDocuments\InPut_Excel\Time_Stamp.xlsx"
+            ,timeStampSheet     = "Ver1"
+            ,DaySheetName       = "IBKR 1Day" 
+            ,scope              =  "5m" # ["5s","1m","5m","30m","1h","1d"]  
+            ,scopeBook          = {
+                                     "5s"       :"5s"
+                                    ,'5 secs'   :"5s"
+                                    ,"1m"       :"1m"
+                                    ,'1 min'    :"1m"
+                                    ,"5m"       :"5m"
+                                    ,'5 mins'   :"5m"
+                                    ,"30m"      :"30m"
+                                    ,'30 mins'  :"30m"
+                                    ,"1h"       :"1h"
+                                    ,'1 hour'   :"1h"
+                                    ,"1d"       :"1d" 
+                                    ,'1 day'    :"1d" 
+                                } 
+      
+        ):
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+            # Date sheet:- Import data and change index to string     Help Link :-    https://stackoverflow.com/questions/44741587/pandas-timestamp-series-to-string
+            #   1-Import data
+            dfD = ImportData.fun2 (filePath_fun = filePath , bookName = DaySheetName) # "IBKR 1Day"
+            
+            if(len(dfD.index)==0):
+                if(DaySheetName == "IBKR 1Day"):
+                    DaySheetName = "Yahoo Dayes"
+                    dfD = ImportData.fun (filePath_fun = filePath , bookName = DaySheetName )   # "Yahoo Dayes"
+                elif(DaySheetName == "Yahoo Dayes"):
+                    DaySheetName = "IBKR 1Day"
+                    dfD = ImportData.fun2 (filePath_fun = filePath , bookName = DaySheetName )   # "Yahoo Dayes"
+                else:
+                    print("Wrong Day Sheet Name")
+                # dfD = ImportData.fun2 (filePath_fun = filePath , bookName = DaySheetName )   # "Yahoo Dayes"
+            #   2-Change index Type to string
+            dfD.index = dfD.index.astype(str)
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+
+
+
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+            # Time Stamp sheet:- Import  data and Set column header 
+            #   1-Import  data
+            book = openpyxl.load_workbook(timeStampPath)
+            sheet = book[timeStampSheet]
+            dfS= pd.DataFrame(sheet.values)
+            #   2-Set column header :- Convert row to column header for Pandas DataFrame : Link https://stackoverflow.com/questions/26147180/convert-row-to-column-header-for-pandas-dataframe
+            dfS.columns = dfS.iloc[0]
+            dfS = dfS.drop(0)
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+
+
+            
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+            # OutPut Dataframe "taro":-     #   01- Create dataframe :-
+            #-------------------------------#   02- Rename column in dataframe :- 
+            #-------------------------------#   03- Clean None Rows :-
+            #-------------------------------#   04- Change object to float :-
+            #-------------------------------#   05- Add date to index colum :-
+            #-------------------------------#   06- Change type of index colum to Time stamp :-
+            #-------------------------------#   07- Return OutPut Dataframe "taro" :-
+            #   01- Create dataframe :- from "dfS" another dataframe    Help Link :- https://www.statology.org/pandas-create-dataframe-from-existing-dataframe/
+            taro = dfS[[    
+                                         ("Index1_"         + scopeBook[scope])
+                                        ,("Index2_"         + scopeBook[scope])
+                                        ,("Name_"           + scopeBook[scope])
+                                        ,("StartDelta_"     + scopeBook[scope])
+                                        ,("EndDelta_"       + scopeBook[scope])
+                                        ,("Fibonacci_"      + scopeBook[scope])
+                                        ,("Scope_"          + scopeBook[scope])
+                                        ,("HourConstant_"   + scopeBook[scope])
+                                        ,("MinConstant_"    + scopeBook[scope])
+                                        ,("SecConstant_"    + scopeBook[scope])
+                                        ,("leftSide_"       + scopeBook[scope])
+                                        ,("Blank_"          + scopeBook[scope])
+                                        ]].copy()                        
+            #   02- Rename column in dataframe :-      Help Link :- https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rename.html
+            taro = taro.rename(columns={                                                                  
+                                         "Index1_"         + scopeBook[scope]    :"Index1"
+                                        ,"Index2_"         + scopeBook[scope]    :"Index2"
+                                        ,"Name_"           + scopeBook[scope]    :"Name"
+                                        ,"StartDelta_"     + scopeBook[scope]    :"StartDelta"
+                                        ,"EndDelta_"       + scopeBook[scope]    :"EndDelta"
+                                        ,"Fibonacci_"      + scopeBook[scope]    :"Fibonacci"
+                                        ,"Scope_"          + scopeBook[scope]    :"Scope"
+                                        ,"HourConstant_"   + scopeBook[scope]    :"HourConstant"
+                                        ,"MinConstant_"    + scopeBook[scope]    :"MinConstant"
+                                        ,"SecConstant_"    + scopeBook[scope]    :"SecConstant"
+                                        ,"leftSide_"       + scopeBook[scope]    :"leftSide"
+                                        ,"Blank_"          + scopeBook[scope]    :"Date"
+                                        })
+            #   03- Clean None Rows :- Help Link :- https://www.digitalocean.com/community/tutorials/pandas-dropna-drop-null-na-values-from-dataframe    ,   https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
+            taro = taro.dropna(how='all')
+            taro.reset_index(inplace=True, drop=True)
+            #   04- Change object to float :-   Help Link https://stackoverflow.com/questions/36814100/pandas-to-numeric-for-multiple-columns
+            cols = taro.columns.drop(["Index1","Index2","Name","Fibonacci","Scope","Date"])   # set colums you dont want to change         
+            taro[cols] = taro[cols].apply(pd.to_numeric, errors='coerce')            
+            #   05- Add date to index colum :-            
+            taro["Date"] = dfD.index[taro.EndDelta]
+            taro.Index2 = taro.Date + " " + taro.Index2                        
+            for x in range (len(taro)): 
+                # IF taro.StartDelta out of bounds for dfD.index set the firist Day is the start of dfD.index    
+                if(len(dfD.index) >= abs(taro.loc[x].StartDelta)): 
+                    # print(">>>>_______________________________<<<<")
+                    # print(dfD.index[taro.loc[x].StartDelta])    
+                    taro.Date[x] = dfD.index[taro.loc[x].StartDelta]      
+                else:                       
+                    taro.Date[x] =    dfD.index[0]                                    
+            taro.Index1 = taro.Date + " " + taro.Index1
+            #   06- Change type of index colum to Time stamp :-            
+            print(">>>>$$$$$$$$$$$$$$<<<<")
+            print(dfD)
+            print(taro)
+            print(">>>>$$$$$$$$$$$$$$<<<<")
+            taro.Index1 = pd.to_datetime(taro.Index1.astype('datetime64[ns]'))
+            taro.Index2 = pd.to_datetime(taro.Index2.astype('datetime64[ns]'))            
+            #   07- Return OutPut Dataframe "taro" :-
+            return taro
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
 def fTimeLable  (    f_Scope
                     ,f_HourConstant
                     ,f_MinConstant
@@ -843,10 +985,6 @@ def fTimeLable  (    f_Scope
         print("source is Wrong")
 
     return outLable
-
-#--------------------------------------------------------------------------------------------------------------------------
-
-
 
 #--------------------------------------------------------------------------------------------------------------------------
     
@@ -1360,6 +1498,7 @@ def LabelPrice5 (    pMax = 6
 
 #--------------------------------------------------------------------------------------------------------------------------
 
+
 def LabelPrice6 (    pMax = 6
                     ,pMin = 2
                 ):
@@ -1433,9 +1572,9 @@ def LabelPrice6 (    pMax = 6
         n_decimals = ntrvlHub[ntrvIndex]['n_Decimals']
         n_Integers = ntrvlHub[ntrvIndex]['n_Integers']
         #__________________________________________________________________________________________________________________    
-        # Calculate Start and End range of Price Label
-        pDN = round((pMin%(10**n_Integers)),n_decimals) 
-        pUP = round((pMax%(10**n_Integers)),n_decimals) 
+        # Calculate Start and End range of Price Label      
+        pDN = round((pMin%(10**n_Integers)),n_decimals)     # Help Link :-  https://stackoverflow.com/questions/63430691/last-two-digits-of-decimal-number-with-a-mask
+        pUP = round((pMax%(10**n_Integers)),n_decimals)     # Help Link :-  https://stackoverflow.com/questions/58065055/floor-and-ceil-with-number-of-decimals 
             
         pStr = round( pMin + (pInc - (pDN%pInc)) ,n_decimals)
         pEnd = round( pMax + (pInc - (pUP%pInc)) ,n_decimals)
@@ -1443,7 +1582,7 @@ def LabelPrice6 (    pMax = 6
         # Calculate Price Label and Prepare Output
         outLable["ticks"] = np.arange(pStr,pEnd,pInc)
         
-        pDec = "%." + pDec + "f"             #   "%.2f" % a
+        pDec = "%." + pDec + "f" #   "%.2f" % a             # Help Link :-  https://stackoverflow.com/questions/455612/limiting-floats-to-two-decimal-points
         outLable["tlabs"] =  [(pDec % x) for x in outLable["ticks"]]    
         #__________________________________________________________________________________________________________________
         # Print out Data
@@ -1463,6 +1602,9 @@ def LabelPrice6 (    pMax = 6
     #__________________________________________________________________________________________________________________
     return outLable
     #__________________________________________________________________________________________________________________
+
+
+
 
 #--------------------------------------------------------------------------------------------------------------------------
 

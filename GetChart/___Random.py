@@ -1,4 +1,9 @@
 
+import pandas as pd
+import numpy as np
+import math
+import ImportData
+import openpyxl
 
 
 
@@ -57,15 +62,22 @@ tDelta_1m_A = -1 #day
 
 
 
+def fibCul(High,Low):
 
+    Fib100 = {'Value':(Low + ((High - Low) * 1.000 ))  ,'linestyle':'solid'  ,'linewidth':3   ,'alpha':0.8   ,'color':'#4ACE14'}
+    Fib764 = {'Value':(Low + ((High - Low) * 0.764 ))  ,'linestyle':'solid'  ,'linewidth':3   ,'alpha':0.8   ,'color':'#E21919'}
+    Fib618 = {'Value':(Low + ((High - Low) * 0.618 ))  ,'linestyle':'solid'  ,'linewidth':3   ,'alpha':0.8   ,'color':'#27DFDD'}
+    Fib500 = {'Value':(Low + ((High - Low) * 0.500 ))  ,'linestyle':'solid'  ,'linewidth':3   ,'alpha':0.8   ,'color':'#E6F226'}
+    Fib382 = {'Value':(Low + ((High - Low) * 0.382 ))  ,'linestyle':'-.'     ,'linewidth':3   ,'alpha':0.8   ,'color':'#27DFDD'}
+    Fib236 = {'Value':(Low + ((High - Low) * 0.236 ))  ,'linestyle':'-.'     ,'linewidth':3   ,'alpha':0.8   ,'color':'#E21919'}
+    Fib000 = {'Value':(Low + ((High - Low) * 0.000 ))  ,'linestyle':'-.'     ,'linewidth':3   ,'alpha':0.8   ,'color':'#4ACE14'}
 
-Fib100 = {'Value':(Low + ((High - Low) * 1.000 ))  ,'linestyle':'solid'  ,'linewidth':3   ,'alpha':0.8   ,'color':'#4ACE14'}
-Fib764 = {'Value':(Low + ((High - Low) * 0.764 ))  ,'linestyle':'solid'  ,'linewidth':3   ,'alpha':0.8   ,'color':'#E21919'}
-Fib618 = {'Value':(Low + ((High - Low) * 0.618 ))  ,'linestyle':'solid'  ,'linewidth':3   ,'alpha':0.8   ,'color':'#27DFDD'}
-Fib500 = {'Value':(Low + ((High - Low) * 0.500 ))  ,'linestyle':'solid'  ,'linewidth':3   ,'alpha':0.8   ,'color':'#E6F226'}
-Fib382 = {'Value':(Low + ((High - Low) * 0.382 ))  ,'linestyle':'-.'     ,'linewidth':3   ,'alpha':0.8   ,'color':'#27DFDD'}
-Fib236 = {'Value':(Low + ((High - Low) * 0.236 ))  ,'linestyle':'-.'     ,'linewidth':3   ,'alpha':0.8   ,'color':'#E21919'}
-Fib000 = {'Value':(Low + ((High - Low) * 0.000 ))  ,'linestyle':'-.'     ,'linewidth':3   ,'alpha':0.8   ,'color':'#4ACE14'}
+    fibolines=dict      (    hlines      =(Fib100['Value']       ,Fib764['Value']        ,Fib618['Value']        ,Fib500['Value']        ,Fib382['Value']        ,Fib236['Value']        ,Fib000['Value'])
+                        ,colors      =[Fib100['color']       ,Fib764['color']        ,Fib618['color']        ,Fib500['color']        ,Fib382['color']        ,Fib236['color']        ,Fib000['color']]
+                        ,linestyle   =[Fib100['linestyle']   ,Fib764['linestyle']    ,Fib618['linestyle']    ,Fib500['linestyle']    ,Fib382['linestyle']    ,Fib236['linestyle']    ,Fib000['linestyle']]
+                        ,linewidths  =[Fib100['linewidth']   ,Fib764['linewidth']    ,Fib618['linewidth']    ,Fib500['linewidth']    ,Fib382['linewidth']    ,Fib236['linewidth']    ,Fib000['linewidth']]
+                        ,alpha       =[Fib100['alpha']       ,Fib764['alpha']        ,Fib618['alpha']        ,Fib500['alpha']        ,Fib382['alpha']        ,Fib236['alpha']        ,Fib000['alpha']]
+                    )
 
 
 
@@ -76,12 +88,7 @@ Fib000 = {'Value':(Low + ((High - Low) * 0.000 ))  ,'linestyle':'-.'     ,'linew
 
 
 
-fibolines=dict      (    hlines      =(Fib100['Value']       ,Fib764['Value']        ,Fib618['Value']        ,Fib500['Value']        ,Fib382['Value']        ,Fib236['Value']        ,Fib000['Value'])
-                        ,colors      =[Fib100['color']       ,Fib764['color']        ,Fib618['color']        ,Fib500['color']        ,Fib382['color']        ,Fib236['color']        ,Fib000['color']]
-                        ,linestyle   =[Fib100['linestyle']   ,Fib764['linestyle']    ,Fib618['linestyle']    ,Fib500['linestyle']    ,Fib382['linestyle']    ,Fib236['linestyle']    ,Fib000['linestyle']]
-                        ,linewidths  =[Fib100['linewidth']   ,Fib764['linewidth']    ,Fib618['linewidth']    ,Fib500['linewidth']    ,Fib382['linewidth']    ,Fib236['linewidth']    ,Fib000['linewidth']]
-                        ,alpha       =[Fib100['alpha']       ,Fib764['alpha']        ,Fib618['alpha']        ,Fib500['alpha']        ,Fib382['alpha']        ,Fib236['alpha']        ,Fib000['alpha']]
-                    )
+
 
 
 
@@ -135,9 +142,137 @@ scopeBook = {
 
 
 
+def fun6(    filePath           = r"C:\Users\lenovo\Desktop\TGL\BCG\OK BCG.xlsx"
+            ,timeStampPath      = r"D:\Python Tools\ChartMaker\SourceDocuments\InPut_Excel\Time_Stamp.xlsx"
+            ,timeStampSheet     = "Ver1"
+            ,DaySheetName       = "IBKR 1Day" 
+            ,scope              =  "5m" # ["5s","1m","5m","30m","1h","1d"]  
+            ,scopeBook          = {
+                                     "5s"       :"5s"
+                                    ,'5 secs'   :"5s"
+                                    ,"1m"       :"1m"
+                                    ,'1 min'    :"1m"
+                                    ,"5m"       :"5m"
+                                    ,'5 mins'   :"5m"
+                                    ,"30m"      :"30m"
+                                    ,'30 mins'  :"30m"
+                                    ,"1h"       :"1h"
+                                    ,'1 hour'   :"1h"
+                                    ,"1d"       :"1d" 
+                                    ,'1 day'    :"1d" 
+                                } 
+      
+        ):
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+            # Date sheet:- Import data and change index to string     Help Link :-    https://stackoverflow.com/questions/44741587/pandas-timestamp-series-to-string
+            #   1-Import data
+            dfD = ImportData.fun2 (filePath_fun = filePath , bookName = DaySheetName) # "IBKR 1Day"
+            
+            if(len(dfD.index)==0):
+                if(DaySheetName == "IBKR 1Day"):
+                    DaySheetName = "Yahoo Dayes"
+                    dfD = ImportData.fun (filePath_fun = filePath , bookName = DaySheetName )   # "Yahoo Dayes"
+                elif(DaySheetName == "Yahoo Dayes"):
+                    DaySheetName = "IBKR 1Day"
+                    dfD = ImportData.fun2 (filePath_fun = filePath , bookName = DaySheetName )   # "Yahoo Dayes"
+                else:
+                    print("Wrong Day Sheet Name")
+                # dfD = ImportData.fun2 (filePath_fun = filePath , bookName = DaySheetName )   # "Yahoo Dayes"
+            #   2-Change index Type to string
+            dfD.index = dfD.index.astype(str)
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+
+
+
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+            # Time Stamp sheet:- Import  data and Set column header 
+            #   1-Import  data
+            book = openpyxl.load_workbook(timeStampPath)
+            sheet = book[timeStampSheet]
+            dfS= pd.DataFrame(sheet.values)
+            #   2-Set column header :- Convert row to column header for Pandas DataFrame : Link https://stackoverflow.com/questions/26147180/convert-row-to-column-header-for-pandas-dataframe
+            dfS.columns = dfS.iloc[0]
+            dfS = dfS.drop(0)
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+
+
+            
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+            # OutPut Dataframe "taro":-     #   01- Create dataframe :-
+            #-------------------------------#   02- Rename column in dataframe :- 
+            #-------------------------------#   03- Clean None Rows :-
+            #-------------------------------#   04- Change object to float :-
+            #-------------------------------#   05- Add date to index colum :-
+            #-------------------------------#   06- Change type of index colum to Time stamp :-
+            #-------------------------------#   07- Return OutPut Dataframe "taro" :-
+            #   01- Create dataframe :- from "dfS" another dataframe    Help Link :- https://www.statology.org/pandas-create-dataframe-from-existing-dataframe/
+            taro = dfS[[    
+                                         ("Index1_"         + scopeBook[scope])
+                                        ,("Index2_"         + scopeBook[scope])
+                                        ,("Name_"           + scopeBook[scope])
+                                        ,("StartDelta_"     + scopeBook[scope])
+                                        ,("EndDelta_"       + scopeBook[scope])
+                                        ,("Fibonacci_"      + scopeBook[scope])
+                                        ,("Scope_"          + scopeBook[scope])
+                                        ,("HourConstant_"   + scopeBook[scope])
+                                        ,("MinConstant_"    + scopeBook[scope])
+                                        ,("SecConstant_"    + scopeBook[scope])
+                                        ,("leftSide_"       + scopeBook[scope])
+                                        ,("Blank_"          + scopeBook[scope])
+                                        ]].copy()                        
+            #   02- Rename column in dataframe :-      Help Link :- https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rename.html
+            taro = taro.rename(columns={                                                                  
+                                         "Index1_"         + scopeBook[scope]    :"Index1"
+                                        ,"Index2_"         + scopeBook[scope]    :"Index2"
+                                        ,"Name_"           + scopeBook[scope]    :"Name"
+                                        ,"StartDelta_"     + scopeBook[scope]    :"StartDelta"
+                                        ,"EndDelta_"       + scopeBook[scope]    :"EndDelta"
+                                        ,"Fibonacci_"      + scopeBook[scope]    :"Fibonacci"
+                                        ,"Scope_"          + scopeBook[scope]    :"Scope"
+                                        ,"HourConstant_"   + scopeBook[scope]    :"HourConstant"
+                                        ,"MinConstant_"    + scopeBook[scope]    :"MinConstant"
+                                        ,"SecConstant_"    + scopeBook[scope]    :"SecConstant"
+                                        ,"leftSide_"       + scopeBook[scope]    :"leftSide"
+                                        ,"Blank_"          + scopeBook[scope]    :"Date"
+                                        })
+            #   03- Clean None Rows :- Help Link :- https://www.digitalocean.com/community/tutorials/pandas-dropna-drop-null-na-values-from-dataframe    ,   https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
+            taro = taro.dropna(how='all')
+            taro.reset_index(inplace=True, drop=True)
+            #   04- Change object to float :-   Help Link https://stackoverflow.com/questions/36814100/pandas-to-numeric-for-multiple-columns
+            cols = taro.columns.drop(["Index1","Index2","Name","Fibonacci","Scope","Date"])   # set colums you dont want to change         
+            taro[cols] = taro[cols].apply(pd.to_numeric, errors='coerce')            
+            #   05- Add date to index colum :-            
+            taro["Date"] = dfD.index[taro.EndDelta]
+            taro.Index2 = taro.Date + " " + taro.Index2                        
+            for x in range (len(taro)): 
+                # IF taro.StartDelta out of bounds for dfD.index set the firist Day is the start of dfD.index    
+                if(len(dfD.index) >= abs(taro.loc[x].StartDelta)): 
+                    # print(">>>>_______________________________<<<<")
+                    # print(dfD.index[taro.loc[x].StartDelta])    
+                    taro.Date[x] = dfD.index[taro.loc[x].StartDelta]      
+                else:                       
+                    taro.Date[x] =    dfD.index[0]                                    
+            taro.Index1 = taro.Date + " " + taro.Index1
+            #   06- Change type of index colum to Time stamp :-            
+            print(">>>>$$$$$$$$$$$$$$<<<<")
+            print(dfD)
+            print(taro)
+            print(">>>>$$$$$$$$$$$$$$<<<<")
+            taro.Index1 = pd.to_datetime(taro.Index1.astype('datetime64[ns]'))
+            taro.Index2 = pd.to_datetime(taro.Index2.astype('datetime64[ns]'))            
+            #   07- Return OutPut Dataframe "taro" :-
+            return taro
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
 
 
 
 
 
 
+
+
+
+
+print("Start test for new Time Stamp")
+
+fun6()
