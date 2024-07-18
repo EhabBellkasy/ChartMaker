@@ -673,6 +673,97 @@ def fun6(    filePath           = r"C:\Users\lenovo\Desktop\TGL\BCG\OK BCG.xlsx"
 #--------------------------------------------------------------------------------------------------------------------------
 
 
+def fun7(    
+             dfD
+            ,dfS            
+            ,scope              =  "5m" # ["5s","1m","5m","30m","1h","1d"]  
+            ,scopeBook          = {
+                                     "5s"       :"5s"
+                                    ,'5 secs'   :"5s"
+                                    ,"1m"       :"1m"
+                                    ,'1 min'    :"1m"
+                                    ,"5m"       :"5m"
+                                    ,'5 mins'   :"5m"
+                                    ,"30m"      :"30m"
+                                    ,'30 mins'  :"30m"
+                                    ,"1h"       :"1h"
+                                    ,'1 hour'   :"1h"
+                                    ,"1d"       :"1d" 
+                                    ,'1 day'    :"1d" 
+                                } 
+      
+        ):
+                        
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+            # OutPut Dataframe "taro":-     #   01- Create dataframe :-
+            #-------------------------------#   02- Rename column in dataframe :- 
+            #-------------------------------#   03- Clean None Rows :-
+            #-------------------------------#   04- Change object to float :-
+            #-------------------------------#   05- Add date to index colum :-
+            #-------------------------------#   06- Change type of index colum to Time stamp :-
+            #-------------------------------#   07- Return OutPut Dataframe "taro" :-
+            #   01- Create dataframe :- from "dfS" another dataframe    Help Link :- https://www.statology.org/pandas-create-dataframe-from-existing-dataframe/
+            taro = dfS[[    
+                                         ("Index1_"         + scopeBook[scope])
+                                        ,("Index2_"         + scopeBook[scope])
+                                        ,("Name_"           + scopeBook[scope])
+                                        ,("StartDelta_"     + scopeBook[scope])
+                                        ,("EndDelta_"       + scopeBook[scope])
+                                        ,("Fibonacci_"      + scopeBook[scope])
+                                        ,("Scope_"          + scopeBook[scope])
+                                        ,("HourConstant_"   + scopeBook[scope])
+                                        ,("MinConstant_"    + scopeBook[scope])
+                                        ,("SecConstant_"    + scopeBook[scope])
+                                        ,("leftSide_"       + scopeBook[scope])
+                                        ,("Blank_"          + scopeBook[scope])
+                                        ]].copy()                        
+            #   02- Rename column in dataframe :-      Help Link :- https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.rename.html
+            taro = taro.rename(columns={                                                                  
+                                         "Index1_"         + scopeBook[scope]    :"Index1"
+                                        ,"Index2_"         + scopeBook[scope]    :"Index2"
+                                        ,"Name_"           + scopeBook[scope]    :"Name"
+                                        ,"StartDelta_"     + scopeBook[scope]    :"StartDelta"
+                                        ,"EndDelta_"       + scopeBook[scope]    :"EndDelta"
+                                        ,"Fibonacci_"      + scopeBook[scope]    :"Fibonacci"
+                                        ,"Scope_"          + scopeBook[scope]    :"Scope"
+                                        ,"HourConstant_"   + scopeBook[scope]    :"HourConstant"
+                                        ,"MinConstant_"    + scopeBook[scope]    :"MinConstant"
+                                        ,"SecConstant_"    + scopeBook[scope]    :"SecConstant"
+                                        ,"leftSide_"       + scopeBook[scope]    :"leftSide"
+                                        ,"Blank_"          + scopeBook[scope]    :"Date"
+                                        })
+            #   03- Clean None Rows :- Help Link :- https://www.digitalocean.com/community/tutorials/pandas-dropna-drop-null-na-values-from-dataframe    ,   https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
+            taro = taro.dropna(how='all')
+            taro.reset_index(inplace=True, drop=True)
+            #   04- Change object to float :-   Help Link https://stackoverflow.com/questions/36814100/pandas-to-numeric-for-multiple-columns
+            cols = taro.columns.drop(["Index1","Index2","Name","Fibonacci","Scope","Date"])   # set colums you dont want to change         
+            taro[cols] = taro[cols].apply(pd.to_numeric, errors='coerce')            
+            #   05- Add date to index colum :-            
+            taro["Date"] = dfD.index[taro.EndDelta]
+            taro.Index2 = taro.Date + " " + taro.Index2                        
+            for x in range (len(taro)): 
+                # IF taro.StartDelta out of bounds for dfD.index set the firist Day is the start of dfD.index    
+                if(len(dfD.index) >= abs(taro.loc[x].StartDelta)): 
+                    # print(">>>>_______________________________<<<<")
+                    # print(dfD.index[taro.loc[x].StartDelta])    
+                    taro.Date[x] = dfD.index[taro.loc[x].StartDelta]      
+                else:                       
+                    taro.Date[x] =    dfD.index[0]                                    
+            taro.Index1 = taro.Date + " " + taro.Index1
+            #   06- Change type of index colum to Time stamp :-            
+            print(">>>>$$$$$$$$$$$$$$<<<<")
+            print(dfD)
+            print(taro)
+            print(">>>>$$$$$$$$$$$$$$<<<<")
+            taro.Index1 = pd.to_datetime(taro.Index1.astype('datetime64[ns]'))
+            taro.Index2 = pd.to_datetime(taro.Index2.astype('datetime64[ns]'))            
+            #   07- Return OutPut Dataframe "taro" :-
+            return taro
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
 
 
 
@@ -1607,6 +1698,492 @@ def LabelPrice6 (    pMax = 6
 
 
 #--------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+def fGetDayDataFrame(    
+                        filePath           = r"C:\Users\lenovo\Desktop\TGL\BCG\OK BCG.xlsx"            
+                        ,DaySheetName       = "IBKR 1Day"                   
+                    ):
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+            # Date sheet:- Import data and change index to string     Help Link :-    https://stackoverflow.com/questions/44741587/pandas-timestamp-series-to-string
+            #   1-Import data
+            dfD = ImportData.fun2 (filePath_fun = filePath , bookName = DaySheetName) # "IBKR 1Day"
+            
+            if(len(dfD.index)==0):
+                if(DaySheetName == "IBKR 1Day"):
+                    DaySheetName = "Yahoo Dayes"
+                    dfD = ImportData.fun (filePath_fun = filePath , bookName = DaySheetName )   # "Yahoo Dayes"
+                elif(DaySheetName == "Yahoo Dayes"):
+                    DaySheetName = "IBKR 1Day"
+                    dfD = ImportData.fun2 (filePath_fun = filePath , bookName = DaySheetName )   # "Yahoo Dayes"
+                else:
+                    print("Wrong Day Sheet Name")
+                # dfD = ImportData.fun2 (filePath_fun = filePath , bookName = DaySheetName )   # "Yahoo Dayes"
+            #   2-Change index Type to string
+            dfD.index = dfD.index.astype(str)
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+            return dfD
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+def fGetTimeStampDataFrame(    
+            timeStampPath      = r"D:\Python Tools\ChartMaker\SourceDocuments\InPut_Excel\Watch_List_Zamzam .xlsx"
+            ,timeStampSheet     = "Sheet2"                  
+        ):
+
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+            # Time Stamp sheet:- Import  data and Set column header 
+            #   1-Import  data
+            book = openpyxl.load_workbook(timeStampPath)
+            sheet = book[timeStampSheet]
+            dfS= pd.DataFrame(sheet.values)
+            #   2-Set column header :- Convert row to column header for Pandas DataFrame : Link https://stackoverflow.com/questions/26147180/convert-row-to-column-header-for-pandas-dataframe
+            dfS.columns = dfS.iloc[0]
+            dfS = dfS.drop(0)
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+            return dfS
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------
+
+def fGetStyle(                 
+             dfS
+            ,AttributeIndex=0
+            ,AttributeList =[
+                 "style_name"
+                ,"base_mpl_style"
+                ,"marketcolors"
+                ,"candle_Up"
+                ,"candle_Down"
+                ,"edge_Up"
+                ,"edge_Down"
+                ,"wick_Up"
+                ,"wick_Down"
+                ,"ohlc_Up"
+                ,"ohlc_Down"
+                ,"volume_Up"
+                ,"volume_Down"
+                ,"vcdopcod"
+                ,"alpha"
+                ,"mavcolors"
+                ,"y_on_right"
+                ,"gridcolor"
+                ,"gridstyle"
+                ,"facecolor"
+                ,"figcolor"
+                ,"rc"
+                ,"axes.edgecolor"
+                ,"axes.linewidth"
+                ,"axes.labelsize"
+                ,"axes.labelweight"
+                ,"axes.grid"
+                ,"axes.grid.axis"
+                ,"axes.grid.which"
+                ,"grid.alpha"
+                ,"grid.color"
+                ,"grid.linestyle"
+                ,"grid.linewidth"
+                ,"figure.facecolor"
+                ,"patch.linewidth"
+                ,"lines.linewidth"
+                ,"font.weight"
+                ,"font.size"
+                ,"figure.titlesize"
+                ,"figure.titleweight"
+                ,"base_mpf_style"]
+            ,AttributeDic = {
+                                 "style_name"           :	"Ehab_Staylo"
+                                ,"base_mpl_style"       :	"dark_background"
+                                ,"marketcolors"         :	"marketcolors"
+                                ,"candle_Up"            :	"#14CE1C"
+                                ,"candle_Down"          :	"#CE1414"
+                                ,"edge_Up"              :	"#14CE1C"
+                                ,"edge_Down"            :	"#CE1414"
+                                ,"wick_Up"              :	"#ffffff"
+                                ,"wick_Down"            :	"#ffffff"
+                                ,"ohlc_Up"              :	"#ffffff"
+                                ,"ohlc_Down"            :	"#ffffff"
+                                ,"volume_Up"            :	"#14CE1C"
+                                ,"volume_Down"          :	"#CE1414"
+                                ,"vcdopcod"             :	 False	
+                                ,"alpha"                :	 2.00	
+                                ,"mavcolors"            :	 ['#ec009c','#78ff8f','#fcf120']	
+                                ,"y_on_right"           :	 True	
+                                ,"gridcolor"            :	 None	
+                                ,"gridstyle"            :	 None	
+                                ,"facecolor"            :	"Black"
+                                ,"figcolor"             :	"gray"
+                                ,"rc"                   :	"rc"
+                                ,"axes.edgecolor"       :	"white"
+                                ,"axes.linewidth"       :	 1.50	
+                                ,"axes.labelsize"       :	"large"
+                                ,"axes.labelweight"     :	"semibold"
+                                ,"axes.grid"            :	 True	
+                                ,"axes.grid.axis"       :	"both"
+                                ,"axes.grid.which"      :	"major"
+                                ,"grid.alpha"           :	 0.90	
+                                ,"grid.color"           :	"#EBEE24"
+                                ,"grid.linestyle"       :	":"	
+                                ,"grid.linewidth"       :	 1.00	
+                                ,"figure.facecolor"     :	"#0a0a0a"
+                                ,"patch.linewidth"      :	 1.00	
+                                ,"lines.linewidth"      :	 1.00	
+                                ,"font.weight"          :	"medium"
+                                ,"font.size"            :	 8.00	
+                                ,"figure.titlesize"     :	"x-large"
+                                ,"figure.titleweight"   :	"semibold"
+                                ,"base_mpf_style"       :	"mike"
+                                }
+
+
+        ):
+                        
+            
+
+            #--------------------------------------------------------------------------------------------------------------------------
+            #   01- Create dataframe :- from "dfS" another dataframe    Help Link :- https://www.statology.org/pandas-create-dataframe-from-existing-dataframe/
+            StyRow = dfS[[    
+                             ("Attribute")
+                            ,("Value")
+                        ]].copy()                        
+            
+            #   02- Clean None Rows :- Help Link :- https://www.digitalocean.com/community/tutorials/pandas-dropna-drop-null-na-values-from-dataframe    ,   https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
+            StyRow = StyRow.dropna(how='all')
+            StyRow.reset_index(inplace=True, drop=True)
+
+
+            #--------------------------------------------------------------------------------------------------------------------------
+            #   03- Read Data from StyRow
+            for AttributeIndex in range(len(AttributeList)):
+
+                stylIndex = AttributeList[AttributeIndex]
+                stylRead = (StyRow.Value[StyRow['Attribute'] == AttributeList[AttributeIndex]].values[0])
+                AttributeDic[stylIndex] = stylRead
+
+                # print(stylIndex , "=" , stylRead  ,"--->", type(stylRead) )
+                # print(">>>>|||||||||||||||<<<<")
+
+
+            #--------------------------------------------------------------------------------------------------------------------------
+            #   03- Cerat Staylo Dict
+                    #Set Style:
+                    # link : C:\Users\lenovo\anaconda3\Lib\site-packages\mplfinance\_styledata\mike.py
+            Staylo =     dict(  style_name    = AttributeDic["style_name"],
+                                base_mpl_style= AttributeDic["base_mpl_style"], 
+                                marketcolors  = {'candle'   : {'up':AttributeDic["candle_Up"]   ,'down':AttributeDic["candle_Down"] },
+                                                  'edge'    : {'up':AttributeDic["edge_Up"]     ,'down':AttributeDic["edge_Down"]   },
+                                                  'wick'    : {'up':AttributeDic["wick_Up"]     ,'down':AttributeDic["wick_Down"]   },
+                                                  'ohlc'    : {'up':AttributeDic["ohlc_Up"]     ,'down':AttributeDic["ohlc_Down"]   },
+                                                  'volume'  : {'up':AttributeDic["volume_Up"]   ,'down':AttributeDic["volume_Down"] },
+                                                  'vcdopcod':       AttributeDic["vcdopcod"], # Volume Color Depends On Price Change On Day
+                                                  'alpha'   :       AttributeDic["alpha"],
+                                                },
+                                mavcolors     = AttributeDic["mavcolors"].split(","),  #    Help Link:- https://www.w3schools.com/python/ref_string_split.asp
+                                y_on_right    = AttributeDic["y_on_right"],
+                                gridcolor     = None if AttributeDic["gridcolor"] == 'None' else AttributeDic["gridcolor"], # None AttributeDic["gridcolor"],     Help Link:-   https://stackoverflow.com/questions/26481774/pythonic-way-to-convert-the-string-none-to-a-proper-none
+                                gridstyle     = None if AttributeDic["gridstyle"] == 'None' else AttributeDic["gridstyle"], # None AttributeDic["gridstyle"],     Help Link:-   https://stackoverflow.com/questions/26481774/pythonic-way-to-convert-the-string-none-to-a-proper-none    
+                                facecolor     = AttributeDic["facecolor"],
+                                figcolor      = AttributeDic["figcolor"],
+                                rc            = [ ('axes.edgecolor'     , AttributeDic["axes.edgecolor"]        ),
+                                                  ('axes.linewidth'     , AttributeDic["axes.linewidth"]        ),
+                                                  ('axes.labelsize'     , AttributeDic["axes.labelsize"]        ),
+                                                  ('axes.labelweight'   , AttributeDic["axes.labelweight"]      ),
+                                                  ('axes.grid'          , AttributeDic["axes.grid"]             ),
+                                                  ('axes.grid.axis'     , AttributeDic["axes.grid.axis"]        ),
+                                                  ('axes.grid.which'    , AttributeDic["axes.grid.which"]       ),
+                                                  ('grid.alpha'         , AttributeDic["grid.alpha"]            ),
+                                                  ('grid.color'         , AttributeDic["grid.color"]            ),
+                                                  ('grid.linestyle'     , AttributeDic["grid.linestyle"]        ),
+                                                  ('grid.linewidth'     , AttributeDic["grid.linewidth"]        ),
+                                                  ('figure.facecolor'   , AttributeDic["figure.facecolor"]      ),
+                                                  ('patch.linewidth'    , AttributeDic["patch.linewidth"]       ),
+                                                  ('lines.linewidth'    , AttributeDic["lines.linewidth"]       ),
+                                                  ('font.weight'        , AttributeDic["font.weight"]           ),
+                                                  ('font.size'          , AttributeDic["font.size"]             ),
+                                                  ('figure.titlesize'   , AttributeDic["figure.titlesize"]      ),
+                                                  ('figure.titleweight' , AttributeDic["figure.titleweight"]    ),
+                                                ],
+                                base_mpf_style= AttributeDic["base_mpf_style"]
+                              )
+
+            
+            #--------------------------------------------------------------------------------------------------------------------------            
+            #   07- Return OutPut  "Staylo" :-
+
+            if(False):
+                print(">>>>**************<<<<")
+                print(StyRow.loc[StyRow['Attribute'] == "base_mpl_style"])
+                print(">>>>**************<<<<")
+
+                print(">>>>$$$$$$$$$$$$$$<<<<")
+                print(dfS)
+                print(StyRow)
+                print(">>>>$$$$$$$$$$$$$$<<<<")
+
+                print(">>>>*******1*******<<<<")
+                stylYest = (StyRow.Value[StyRow['Attribute'] == "gridcolor"].values[0])
+                print(stylYest, type(stylYest), type(None))
+                print(">>>>*******2*******<<<<")
+                print(AttributeDic)
+                print(">>>>*******3*******<<<<")
+                print(Staylo)
+                print(">>>>**************<<<<")
+
+            return Staylo
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+
+
+
+def fGetStyle2(                 
+             dfS
+            ,ShowOutPut = False
+            ,AttributeIndex=0
+            ,AttributeList =[
+                 "style_name"
+                ,"base_mpl_style"
+                ,"marketcolors"
+                ,"candle_Up"
+                ,"candle_Down"
+                ,"edge_Up"
+                ,"edge_Down"
+                ,"wick_Up"
+                ,"wick_Down"
+                ,"ohlc_Up"
+                ,"ohlc_Down"
+                ,"volume_Up"
+                ,"volume_Down"
+                ,"vcdopcod"
+                ,"alpha"
+                ,"mavcolors"
+                ,"y_on_right"
+                ,"gridcolor"
+                ,"gridstyle"
+                ,"facecolor"
+                ,"figcolor"
+                ,"rc"
+                ,"axes.edgecolor"
+                ,"axes.linewidth"
+                ,"axes.labelsize"
+                ,"axes.labelweight"
+                ,"axes.grid"
+                ,"axes.grid.axis"
+                ,"axes.grid.which"
+                ,"grid.alpha"
+                ,"grid.color"
+                ,"grid.linestyle"
+                ,"grid.linewidth"
+                ,"figure.facecolor"
+                ,"patch.linewidth"
+                ,"lines.linewidth"
+                ,"font.weight"
+                ,"font.size"
+                ,"figure.titlesize"
+                ,"figure.titleweight"
+                ,"base_mpf_style"]
+            ,AttributeDic = {
+                                 "style_name"           :	"Ehab_Staylo"
+                                ,"base_mpl_style"       :	"dark_background"
+                                ,"marketcolors"         :	"marketcolors"
+                                ,"candle_Up"            :	"#14CE1C"
+                                ,"candle_Down"          :	"#CE1414"
+                                ,"edge_Up"              :	"#14CE1C"
+                                ,"edge_Down"            :	"#CE1414"
+                                ,"wick_Up"              :	"#ffffff"
+                                ,"wick_Down"            :	"#ffffff"
+                                ,"ohlc_Up"              :	"#ffffff"
+                                ,"ohlc_Down"            :	"#ffffff"
+                                ,"volume_Up"            :	"#14CE1C"
+                                ,"volume_Down"          :	"#CE1414"
+                                ,"vcdopcod"             :	 False	
+                                ,"alpha"                :	 2.00	
+                                ,"mavcolors"            :	 ['#ec009c','#78ff8f','#fcf120']	
+                                ,"y_on_right"           :	 True	
+                                ,"gridcolor"            :	 None	
+                                ,"gridstyle"            :	 None	
+                                ,"facecolor"            :	"Black"
+                                ,"figcolor"             :	"gray"
+                                ,"rc"                   :	"rc"
+                                ,"axes.edgecolor"       :	"white"
+                                ,"axes.linewidth"       :	 1.50	
+                                ,"axes.labelsize"       :	"large"
+                                ,"axes.labelweight"     :	"semibold"
+                                ,"axes.grid"            :	 True	
+                                ,"axes.grid.axis"       :	"both"
+                                ,"axes.grid.which"      :	"major"
+                                ,"grid.alpha"           :	 0.90	
+                                ,"grid.color"           :	"#EBEE24"
+                                ,"grid.linestyle"       :	":"	
+                                ,"grid.linewidth"       :	 1.00	
+                                ,"figure.facecolor"     :	"#0a0a0a"
+                                ,"patch.linewidth"      :	 1.00	
+                                ,"lines.linewidth"      :	 1.00	
+                                ,"font.weight"          :	"medium"
+                                ,"font.size"            :	 8.00	
+                                ,"figure.titlesize"     :	"x-large"
+                                ,"figure.titleweight"   :	"semibold"
+                                ,"base_mpf_style"       :	"mike"
+                                }
+
+
+        ):
+                        
+            
+
+            #--------------------------------------------------------------------------------------------------------------------------
+            #   01- Create dataframe :- from "dfS" another dataframe    Help Link :- https://www.statology.org/pandas-create-dataframe-from-existing-dataframe/
+            StyRow = dfS[[    
+                             ("Attribute")
+                            ,("Value")
+                        ]].copy()                        
+            
+            #   02- Clean None Rows :- Help Link :- https://www.digitalocean.com/community/tutorials/pandas-dropna-drop-null-na-values-from-dataframe    ,   https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html
+            StyRow = StyRow.dropna(how='all')
+            StyRow.reset_index(inplace=True, drop=True)
+
+
+            #--------------------------------------------------------------------------------------------------------------------------
+            #   03- Read Data from StyRow
+            timeScope = (StyRow.Value[StyRow['Attribute'] == 'timeScope'].values[0]).split(",")
+            if(ShowOutPut): print(timeScope)
+
+            for AttributeIndex in range(len(AttributeList)):
+                stylIndex = AttributeList[AttributeIndex]
+                stylRead = (StyRow.Value[StyRow['Attribute'] == AttributeList[AttributeIndex]].values[0])
+                AttributeDic[stylIndex] = stylRead
+                if(ShowOutPut):
+                    print(stylIndex , "=" , stylRead  ,"--->", type(stylRead) )
+                    print(">>>>|||||||||||||||<<<<")
+
+
+            #--------------------------------------------------------------------------------------------------------------------------
+            #   03- Cerat Staylo Dict
+                    #Set Style:
+                    # link : C:\Users\lenovo\anaconda3\Lib\site-packages\mplfinance\_styledata\mike.py
+            Staylo =     dict(  style_name    = AttributeDic["style_name"],
+                                base_mpl_style= AttributeDic["base_mpl_style"], 
+                                marketcolors  = {'candle'   : {'up':AttributeDic["candle_Up"]   ,'down':AttributeDic["candle_Down"] },
+                                                  'edge'    : {'up':AttributeDic["edge_Up"]     ,'down':AttributeDic["edge_Down"]   },
+                                                  'wick'    : {'up':AttributeDic["wick_Up"]     ,'down':AttributeDic["wick_Down"]   },
+                                                  'ohlc'    : {'up':AttributeDic["ohlc_Up"]     ,'down':AttributeDic["ohlc_Down"]   },
+                                                  'volume'  : {'up':AttributeDic["volume_Up"]   ,'down':AttributeDic["volume_Down"] },
+                                                  'vcdopcod':       AttributeDic["vcdopcod"], # Volume Color Depends On Price Change On Day
+                                                  'alpha'   :       AttributeDic["alpha"],
+                                                },
+                                mavcolors     = AttributeDic["mavcolors"].split(","),  #    Help Link:- https://www.w3schools.com/python/ref_string_split.asp
+                                y_on_right    = AttributeDic["y_on_right"],
+                                gridcolor     = None if AttributeDic["gridcolor"] == 'None' else AttributeDic["gridcolor"], # None AttributeDic["gridcolor"],     Help Link:-   https://stackoverflow.com/questions/26481774/pythonic-way-to-convert-the-string-none-to-a-proper-none
+                                gridstyle     = None if AttributeDic["gridstyle"] == 'None' else AttributeDic["gridstyle"], # None AttributeDic["gridstyle"],     Help Link:-   https://stackoverflow.com/questions/26481774/pythonic-way-to-convert-the-string-none-to-a-proper-none    
+                                facecolor     = AttributeDic["facecolor"],
+                                figcolor      = AttributeDic["figcolor"],
+                                rc            = [ ('axes.edgecolor'     , AttributeDic["axes.edgecolor"]        ),
+                                                  ('axes.linewidth'     , AttributeDic["axes.linewidth"]        ),
+                                                  ('axes.labelsize'     , AttributeDic["axes.labelsize"]        ),
+                                                  ('axes.labelweight'   , AttributeDic["axes.labelweight"]      ),
+                                                  ('axes.grid'          , AttributeDic["axes.grid"]             ),
+                                                  ('axes.grid.axis'     , AttributeDic["axes.grid.axis"]        ),
+                                                  ('axes.grid.which'    , AttributeDic["axes.grid.which"]       ),
+                                                  ('grid.alpha'         , AttributeDic["grid.alpha"]            ),
+                                                  ('grid.color'         , AttributeDic["grid.color"]            ),
+                                                  ('grid.linestyle'     , AttributeDic["grid.linestyle"]        ),
+                                                  ('grid.linewidth'     , AttributeDic["grid.linewidth"]        ),
+                                                  ('figure.facecolor'   , AttributeDic["figure.facecolor"]      ),
+                                                  ('patch.linewidth'    , AttributeDic["patch.linewidth"]       ),
+                                                  ('lines.linewidth'    , AttributeDic["lines.linewidth"]       ),
+                                                  ('font.weight'        , AttributeDic["font.weight"]           ),
+                                                  ('font.size'          , AttributeDic["font.size"]             ),
+                                                  ('figure.titlesize'   , AttributeDic["figure.titlesize"]      ),
+                                                  ('figure.titleweight' , AttributeDic["figure.titleweight"]    ),
+                                                ],
+                                base_mpf_style= AttributeDic["base_mpf_style"]
+                              )
+
+            
+            #--------------------------------------------------------------------------------------------------------------------------            
+            #   07- Return OutPut  "Staylo" :-
+
+            if(ShowOutPut):
+                print(">>>>**************<<<<")
+                print(StyRow.loc[StyRow['Attribute'] == "base_mpl_style"])
+                print(">>>>**************<<<<")
+
+                print(">>>>$$$$$$$$$$$$$$<<<<")
+                print(dfS)
+                print(StyRow)
+                print(">>>>$$$$$$$$$$$$$$<<<<")
+
+                print(">>>>*******1*******<<<<")
+                stylYest = (StyRow.Value[StyRow['Attribute'] == "gridcolor"].values[0])
+                print(stylYest, type(stylYest), type(None))
+                print(">>>>*******2*******<<<<")
+                print(AttributeDic)
+                print(">>>>*******3*******<<<<")
+                print(Staylo)
+                print(">>>>**************<<<<")
+
+            return Staylo,timeScope
+            #----------------------------------------------------------------------------------------------------------------------------------------------     
+
+
+#--------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
 
 
 

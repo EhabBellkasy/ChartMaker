@@ -120,6 +120,9 @@ class IBKR(EClient, EWrapper):
             df['SMA150']         = ta.trend.sma_indicator(df.Close, 150)
             df['SMA200']         = ta.trend.sma_indicator(df.Close, 200)
             df['SMA_past200']    = df['SMA200'].shift(20)
+            df['EMA050']         = ta.trend.ema_indicator(df.Close,  50)
+            df['EMA200']         = ta.trend.ema_indicator(df.Close, 200)
+            df['EMA500']         = ta.trend.ema_indicator(df.Close, 500)
 
         
         df['low'+str(rollingHL)]    = df.Low.rolling(rollingHL).min()

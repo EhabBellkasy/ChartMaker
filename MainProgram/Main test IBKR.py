@@ -34,7 +34,7 @@ IBKR=DataIBKR.IBKR()
 
 # import Watch List from excel 
 print ("import watch List from excel ")
-watchList_xl = pd.read_excel(filePathWL)
+watchList_xl = pd.read_excel(filePathWL, keep_default_na=False)            # Ticker "NA" Problem Solve Help Link :- https://stackoverflow.com/questions/33952142/prevent-pandas-from-interpreting-na-as-nan-in-a-string
 tickersWL = watchList_xl.Symbol.to_list()
 watchList_xl = watchList_xl.set_index('Symbol')
 
@@ -99,27 +99,27 @@ for ticker_index in tickersWL :
                                         '30 secs','15 secs','10 secs','5 secs'#,'1 secs'
                                      ],
                             nfConfigSet ={
-                                    '1 secs' :{'SizeIndex': 0, 'DurationIndex':1, 'DurationLenth': 1, 'Rolling':60, 'SheetName':'IBKR 1s'     },
-                                    '5 secs' :{'SizeIndex': 1, 'DurationIndex':1, 'DurationLenth': 2, 'Rolling':60, 'SheetName':'IBKR 5s'     },
-                                    '10 secs':{'SizeIndex': 2, 'DurationIndex':1, 'DurationLenth': 2, 'Rolling':30, 'SheetName':'IBKR 10s'    },
-                                    '15 secs':{'SizeIndex': 3, 'DurationIndex':1, 'DurationLenth': 2, 'Rolling':20, 'SheetName':'IBKR 15s'    },
-                                    '30 secs':{'SizeIndex': 4, 'DurationIndex':1, 'DurationLenth': 2, 'Rolling':10, 'SheetName':'IBKR 30s'    },
-                                    '1 min'  :{'SizeIndex': 5, 'DurationIndex':1, 'DurationLenth': 2, 'Rolling': 5, 'SheetName':"IBKR 1m"     },
-                                    '2 mins' :{'SizeIndex': 6, 'DurationIndex':1, 'DurationLenth': 2, 'Rolling': 5, 'SheetName':'IBKR 2m'     },
-                                    '3 mins' :{'SizeIndex': 7, 'DurationIndex':1, 'DurationLenth': 2, 'Rolling':10, 'SheetName':'IBKR 3m'     },
-                                    '5 mins' :{'SizeIndex': 8, 'DurationIndex':1, 'DurationLenth': 3, 'Rolling': 6, 'SheetName':'IBKR 5m'     },
-                                    '10 mins':{'SizeIndex': 9, 'DurationIndex':1, 'DurationLenth': 9, 'Rolling': 6, 'SheetName':'IBKR 10m'    },
-                                    '15 mins':{'SizeIndex':10, 'DurationIndex':1, 'DurationLenth': 9, 'Rolling':12, 'SheetName':'IBKR 15m'    },
-                                    '20 mins':{'SizeIndex':11, 'DurationIndex':1, 'DurationLenth':12, 'Rolling':12, 'SheetName':'IBKR 20m'    },
-                                    '30 mins':{'SizeIndex':12, 'DurationIndex':1, 'DurationLenth':12, 'Rolling':11, 'SheetName':'IBKR 30m'    },
-                                    '1 hour' :{'SizeIndex':13, 'DurationIndex':1, 'DurationLenth':34, 'Rolling':16, 'SheetName':'IBKR 1H'     },
-                                    '2 hours':{'SizeIndex':14, 'DurationIndex':1, 'DurationLenth':34, 'Rolling': 8, 'SheetName':'IBKR 2H'     },
-                                    '3 hours':{'SizeIndex':15, 'DurationIndex':1, 'DurationLenth':34, 'Rolling':30, 'SheetName':'IBKR 3H'     },
-                                    '4 hours':{'SizeIndex':16, 'DurationIndex':1, 'DurationLenth':34, 'Rolling':20, 'SheetName':'IBKR 4H'     },
-                                    '8 hours':{'SizeIndex':17, 'DurationIndex':1, 'DurationLenth':34, 'Rolling':42, 'SheetName':'IBKR 8H'     },
-                                    '1 day'  :{'SizeIndex':18, 'DurationIndex':4, 'DurationLenth': 5, 'Rolling':21, 'SheetName':'IBKR 1Day'   },
-                                    '1W'     :{'SizeIndex':19, 'DurationIndex':4, 'DurationLenth': 5, 'Rolling':12, 'SheetName':'IBKR 1week'  },
-                                    '1M'     :{'SizeIndex':20, 'DurationIndex':4, 'DurationLenth': 5, 'Rolling':12, 'SheetName':'IBKR 1Month' }
+                                    '1 secs' :{'SizeIndex': 0, 'DurationIndex':1, 'DurationLenth':  1, 'Rolling':60, 'SheetName':'IBKR 1s'     },
+                                    '5 secs' :{'SizeIndex': 1, 'DurationIndex':1, 'DurationLenth':  2, 'Rolling':60, 'SheetName':'IBKR 5s'     },
+                                    '10 secs':{'SizeIndex': 2, 'DurationIndex':1, 'DurationLenth':  2, 'Rolling':30, 'SheetName':'IBKR 10s'    },
+                                    '15 secs':{'SizeIndex': 3, 'DurationIndex':1, 'DurationLenth':  2, 'Rolling':20, 'SheetName':'IBKR 15s'    },
+                                    '30 secs':{'SizeIndex': 4, 'DurationIndex':1, 'DurationLenth':  2, 'Rolling':10, 'SheetName':'IBKR 30s'    },
+                                    '1 min'  :{'SizeIndex': 5, 'DurationIndex':1, 'DurationLenth':  2, 'Rolling': 5, 'SheetName':"IBKR 1m"     },
+                                    '2 mins' :{'SizeIndex': 6, 'DurationIndex':1, 'DurationLenth':  2, 'Rolling': 5, 'SheetName':'IBKR 2m'     },
+                                    '3 mins' :{'SizeIndex': 7, 'DurationIndex':1, 'DurationLenth':  2, 'Rolling':10, 'SheetName':'IBKR 3m'     },
+                                    '5 mins' :{'SizeIndex': 8, 'DurationIndex':1, 'DurationLenth':  3, 'Rolling': 6, 'SheetName':'IBKR 5m'     },
+                                    '10 mins':{'SizeIndex': 9, 'DurationIndex':1, 'DurationLenth':  9, 'Rolling': 6, 'SheetName':'IBKR 10m'    },
+                                    '15 mins':{'SizeIndex':10, 'DurationIndex':1, 'DurationLenth':  9, 'Rolling':12, 'SheetName':'IBKR 15m'    },
+                                    '20 mins':{'SizeIndex':11, 'DurationIndex':1, 'DurationLenth':180, 'Rolling':12, 'SheetName':'IBKR 20m'    },
+                                    '30 mins':{'SizeIndex':12, 'DurationIndex':1, 'DurationLenth':180, 'Rolling':11, 'SheetName':'IBKR 30m'    },
+                                    '1 hour' :{'SizeIndex':13, 'DurationIndex':1, 'DurationLenth':180, 'Rolling':16, 'SheetName':'IBKR 1H'     },
+                                    '2 hours':{'SizeIndex':14, 'DurationIndex':1, 'DurationLenth':180, 'Rolling': 8, 'SheetName':'IBKR 2H'     },
+                                    '3 hours':{'SizeIndex':15, 'DurationIndex':1, 'DurationLenth':180, 'Rolling':30, 'SheetName':'IBKR 3H'     },
+                                    '4 hours':{'SizeIndex':16, 'DurationIndex':1, 'DurationLenth':180, 'Rolling':20, 'SheetName':'IBKR 4H'     },
+                                    '8 hours':{'SizeIndex':17, 'DurationIndex':1, 'DurationLenth':180, 'Rolling':42, 'SheetName':'IBKR 8H'     },
+                                    '1 day'  :{'SizeIndex':18, 'DurationIndex':4, 'DurationLenth':  5, 'Rolling':21, 'SheetName':'IBKR 1Day'   },
+                                    '1W'     :{'SizeIndex':19, 'DurationIndex':4, 'DurationLenth':  5, 'Rolling':12, 'SheetName':'IBKR 1week'  },
+                                    '1M'     :{'SizeIndex':20, 'DurationIndex':4, 'DurationLenth':  5, 'Rolling':12, 'SheetName':'IBKR 1Month' }
                                     }
                         )
 
@@ -157,15 +157,15 @@ for ticker_index in tickersWL :
     #                         imageType       = '.png'
     #                 )
 
-    GetChart.fun7   (   # Set Varibles
-                        #------------------------------------------------
-                        tickerName      = ticker_index     
-                       ,filePathExcel   = pathExcel + ticker_index + '.xlsx'
-                       ,filePathChart   = pathFile            #C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Chart test.jpg
-                       ,flagYahoo       = False
-                       ,flagIBKR        = True
-                       ,imageType       = '.png'
-                    )
+   #  GetChart.fun8   (   # Set Varibles
+   #                      #------------------------------------------------
+   #                      tickerName      = ticker_index     
+   #                     ,filePathExcel   = pathExcel + ticker_index + '.xlsx'
+   #                     ,filePathChart   = pathFile            #C:\Users\lenovo\Desktop\Python Project\Ehab\Results\Chart test.jpg
+   #                     ,flagYahoo       = False
+   #                     ,flagIBKR        = True
+   #                     ,imageType       = '.png'
+   #                  )
 
 print (f' Watch list is : ')
 print (watchList_xl)
